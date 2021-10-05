@@ -10,13 +10,14 @@ import java.util.stream.Collectors;
 
 
 public enum Role {
-    USER(Collections.singletonList(Permission.PERMISSION_READ)),
-    ADMIN(Arrays.asList(Permission.PERMISSION_READ,Permission.PERMISSION_WRITE));
+    USER(Collections.singletonList(Authority.AUTHORITY_USER)),
+    WORKER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_WORKER)),
+    ADMIN(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_ADMIN));
 
-    private final List<Permission> permissions;
+    private final List<Authority> authorities;
 
-    Role(List<Permission> permissions) {
-        this.permissions = permissions;
+    Role(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 
 //    public Set<Permission> getPermissions() {
@@ -24,9 +25,9 @@ public enum Role {
 //    }
 
     public Set<SimpleGrantedAuthority> getAuthorities(){
-        return permissions
+        return authorities
                 .stream()
-                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
                 .collect(Collectors.toSet());
     }
 }

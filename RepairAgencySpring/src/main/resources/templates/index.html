@@ -4,34 +4,31 @@
     <title>None</title>
 </head>
 <body>
-<div th:replace="~{layouts/navigationbar :: bar}"></div>
 <div th:replace="~{layouts/common :: header}"></div>
 
 
 <p th:utext="#{home.welcome}">Welcome!</p>
-<p><span th:utext="#{home.today.is(${today})}">Today is: 13 February 2011</span></p>
-<span th:text="${#locale.language}">US</span>
 
-<p>Please select an option</p>
-<ol>
-    <li><a href="product/list.html" th:href="@{/product/list}">Product List</a></li>
-    <li><a href="order/list.html" th:href="@{/order/list}">Order List</a></li>
-    <li><a href="subscribe.html" th:href="@{/subscribe}">Subscribe to our Newsletter</a></li>
-    <li><a href="userprofile.html" th:href="@{/userprofile}">See User Profile</a></li>
-</ol>
+<!--<p>Please select an option</p>-->
+<!--<ol>-->
+<!--    <li><a href="product/list.html" th:href="@{/product/list}">Product List</a></li>-->
+<!--    <li><a href="order/list.html" th:href="@{/order/list}">Order List</a></li>-->
+<!--    <li><a href="subscribe.html" th:href="@{/subscribe}">Subscribe to our Newsletter</a></li>-->
+<!--    <li><a href="userprofile.html" th:href="@{/userprofile}">See User Profile</a></li>-->
+<!--</ol>-->
 
-<table>
-    <tr>
-        <th>NAME</th>
-        <th>PRICE</th>
-        <th>IN STOCK</th>
-    </tr>
-    <tr th:each="prod,iiterStat : ${prods}">
-        <td th:text="|${prod.name} ${iiterStat.index}  ${iiterStat.count}|">Onions</td>
-        <td th:text="${prod.price}">2.41</td>
-        <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
-    </tr>
-</table>
+<!--<table>-->
+<!--    <tr>-->
+<!--        <th>NAME</th>-->
+<!--        <th>PRICE</th>-->
+<!--        <th>IN STOCK</th>-->
+<!--    </tr>-->
+<!--    <tr th:each="prod,iiterStat : ${prods}">-->
+<!--        <td th:text="|${prod.name} ${iiterStat.index}  ${iiterStat.count}|">Onions</td>-->
+<!--        <td th:text="${prod.price}">2.41</td>-->
+<!--        <td th:text="${prod.inStock}? #{true} : #{false}">yes</td>-->
+<!--    </tr>-->
+<!--</table>-->
 
 
 <div th:replace="~{layouts/common :: footer}"></div>
