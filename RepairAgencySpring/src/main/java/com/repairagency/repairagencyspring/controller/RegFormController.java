@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
@@ -18,9 +20,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 @Slf4j
-@RestController
+@Controller
 @RequestMapping(value = "/api")
 public class RegFormController {
 
@@ -32,10 +33,15 @@ public class RegFormController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(value = "/reg_form", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public void registrationFormController(User user){
         userRepo.save(new UserDto(user));
         log.info("{}", user);
+    }
+
+    @GetMapping("/register")
+    public String regForm(Model model){
+        return "api/reg_form";
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
