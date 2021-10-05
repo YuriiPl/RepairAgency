@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:lang="${#locale.language}">
+<head th:replace="~{layouts/common :: head}" >
+    <title>None</title>
+</head>
+<body>
+<div th:replace="~{layouts/common :: header}"></div>
+
+<script th:inline="javascript">
+    function onRegFormSubmit(form){
+        let inp1 = document.getElementById('user-passwd');
+        let inp2 = document.getElementById('user-passwd-repeat');
+        if(inp1.value===inp2.value){
+            fetchPostJson(form,
+                function (json) {
+                    console.log(json);
+                    //document.getElementById('iframe1').contentWindow.location.reload();
+                    document.forms["sendForm"].reset();
+                },
+                function (json) {
+                    console.log(json);
+                    const map1 = new Map();
+                    map1.set('wrongGender', /*[[#{regform.wrongGender}]]*/'text');
+                    map1.set('wrongLoginSize', /*[[#{regform.wrongLoginSize}]]*/'text');
+                    map1.set('wrongLogin', /*[[#{regform.wrongLogin}]]*/'text');
+                    map1.set('wrongEmail', /*[[#{regform.wrongEmail}]]*/'text');
+                    map1.set('wrongUsername', /*[[#{regform.wrongUsername}]]*/'text');
+                    map1.set('wrongPassword', /*[[#{regform.wrongPassword}]]*/'text');
+                    map1.set('user_email_exist', /*[[#{regform.userEmailExists}]]*/'text');
+                    let h='';
+                    for (let i in json.message) {
+                        h += map1.get(json.message[i])+'<br>';
+                    }
+                    let modalWindow = new bootstrap.Modal(document.getElementById('modalWindow'), {});
+                    document.querySelector('#modalWindow .modal-body').innerHTML=h;
+                    modalWindow.show();
+                }
+            );
+        } else {
+            let modalWindow = new bootstrap.Modal(document.getElementById('modalWindow'), {});
+            document.querySelector('#modalWindow .modal-body').innerHTML=/*[[#{regform.passwordMismatch}]]*/ null;
+            modalWindow.show();
+        }
+    }
+</script>
+
+
+<div class="container-fluid" style="max-width: 500px">
+    <div class="container">
+
+        <h1 th:text="#{regform.title}">title</h1>
+
+
+        <form th:action="@{/api/register}" name="sendForm" method="post" onsubmit="onRegFormSubmit(this);return false;">
+        <div class="form-group">
+            <label for="user-name" th:text="#{regform.yourname}">your name</label>
+            <input required type="text" class="form-control" id="user-name" name="name"  th:placeholder="#{regform.placeholder.yourname}"/>
+        </div>
+        <div class="form-group">
+            <span th:text="#{regform.sex}">sex:</span>
+            <input type="radio" id="contactChoice1" name="userSex" value="MALE" checked/>
+            <label for="contactChoice1" th:text="#{regform.male}">male</label>
+            <input type="radio" id="contactChoice2" name="userSex" value="FEMALE"/>
+            <label for="contactChoice2" th:text="#{regform.female}">female</label>
+            <input type="radio" id="contactChoice3" name="userSex" value="OTHER"/>
+            <label for="contactChoice3" th:text="#{regform.other}">other</label>
+        </div>
+        <div class="form-group">
+            <label for="user-email" th:text="#{regform.email}">e-mail</label>
+            <input required type="email" class="form-control" id="user-email" name="email" aria-describedby="emailHelp" th:placeholder="#{regform.placeholder.email}"/>
+            <small id="emailHelp" class="form-text text-muted" th:text="#{regform.email.noshare}">email.nochare</small>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="acceptNewsLatter" id="chkBxAccept"/>
+            <label class="form-check-label" for="chkBxAccept" th:text="#{regform.chkbx.accept}">checkbox accept</label>
+        </div>
+        <div class="form-group">
+            <label for="user-login" th:text="#{regform.login}">regform login</label>
+            <input required type="text" class="form-control" id="user-login" name="login" th:placeholder="#{regform.placeholder.login}"/>
+        </div>
+        <div class="form-group">
+            <label for="user-passwd" th:text="#{regform.password}">reg form password</label>
+            <input required type="password" class="form-control" id="user-passwd" name="password" th:placeholder="#{regform.placeholder.password}"/>
+            <label for="user-passwd-repeat" th:text="#{regform.password.repeat}">reg form password repeat</label>
+            <input required type="password" class="form-control" id="user-passwd-repeat" th:placeholder="#{regform.placeholder.password.repeat}"/>
+        </div>
+            <button type="submit" class="btn btn-primary" th:text="#{regform.submit}">Submit</button>
+        </form>
+
+    </div>
+</div>
+
+<!-- Modal window -->
+<div class="modal fade" id="modalWindow" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div>Just for test</div>-->
+<!--<iframe id="iframe1" src="/users" width="100%" height="700" />-->
+<!--</@c.page>-->
+
+<div th:replace="~{layouts/common :: footer}"></div>
+</body>
+</html>
