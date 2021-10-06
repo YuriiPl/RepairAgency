@@ -16,6 +16,11 @@ public class PagesController {
         return "index";
     }
 
+    @GetMapping("/403")
+    public String error403() {
+        return "/errors/403";
+    }
+
 //    @GetMapping("/error")
 //    public String errorPage(HttpServletRequest request, Model model)
 //    {
