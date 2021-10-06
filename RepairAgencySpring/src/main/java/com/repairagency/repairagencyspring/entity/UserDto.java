@@ -49,6 +49,7 @@ public class UserDto {
     @Column(name = "newsaccept")
     private boolean acceptNewsLatter;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "sex")
     private UserSex userSex;
 

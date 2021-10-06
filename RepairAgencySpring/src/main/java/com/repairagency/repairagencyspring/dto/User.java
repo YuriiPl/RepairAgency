@@ -2,12 +2,6 @@ package com.repairagency.repairagencyspring.dto;
 
 import com.repairagency.repairagencyspring.model.Role;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 
 @Getter
@@ -35,12 +29,10 @@ public class User {
 
     private boolean acceptNewsLatter;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull(message = "wrongGender")
     private UserSex userSex;
 
-    @Enumerated(EnumType.STRING)
     private Role userRole;
 
-    @Column(name = "cents")
     Long moneyCents;
 }
