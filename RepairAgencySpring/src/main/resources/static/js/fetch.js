@@ -14,8 +14,8 @@ function fetchPostJson(form, okFunc, errorFunc){
         credentials: "include"
     })
     .then(response => {
-        let func = okFunc;
-        if(!response.ok)func=errorFunc;
+        let func = errorFunc;
+        if(response.ok)func=okFunc;
         response.json().then(data => {
             func(data);
         }).catch(function () {
