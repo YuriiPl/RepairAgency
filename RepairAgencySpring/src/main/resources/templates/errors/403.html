@@ -8,9 +8,12 @@
 
 <div class="container-fluid" style="max-width: 800px">
   <div class="container">
-    <h1 th:text="#{error403.head}">403 - Access is denied</h1>
-    <div class="text-center" th:utext="#{error403.text(${#httpServletRequest.remoteUser})}">Hello '[[${#httpServletRequest.remoteUser}]]',
-      you do not have permission to access this page.</div>
+    <div class="text-center">
+      <h1 th:text="#{error403.head}">403 - Access is denied</h1>
+      <div th:utext="#{error403.text(${#httpServletRequest.remoteUser})}">Hello '[[${#httpServletRequest.remoteUser}]]',
+        you do not have permission to access this page.</div>
+      <div th:text="|(${#response.getStatus()})|"></div>
+    </div>
   </div>
 </div>
 
