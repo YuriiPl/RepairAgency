@@ -21,11 +21,11 @@ public class PagesController {
         return "index";
     }
 
-    @PreAuthorize("hasAuthority('perm:admin')")
-    @GetMapping("/test")
-    public String errorPage(HttpServletRequest request, Model model)
-    {
-        return "index";
-    }
+//    @PreAuthorize("hasAuthority('perm:admin')")
+//    @GetMapping("/test")
+//    public String errorPage(HttpServletRequest request, Model model)
+//    {
+//        return "index";
+//    }
 
 }

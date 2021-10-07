@@ -10,7 +10,7 @@
   <div class="container">
     <div class="text-center">
       <h1 th:text="#{error403.head}">403 - Access is denied</h1>
-      <div th:utext="#{error403.text(${#httpServletRequest.remoteUser})}">Hello '[[${#httpServletRequest.remoteUser}]]',
+      <div th:utext="#{error403.text(${#httpServletRequest.remoteUser?:#{error403.guest}})}">Hello '[[${#httpServletRequest.remoteUser}]]',
         you do not have permission to access this page.</div>
       <div th:text="|(${#response.getStatus()})|"></div>
     </div>
