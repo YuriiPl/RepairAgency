@@ -15,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -25,12 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
 
-    private final AccessDeniedHandler accessDeniedHandler;
-
     @Autowired
-    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, AccessDeniedHandler accessDeniedHandler, AccessDeniedHandler accessDeniedHandler1) {
+    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.accessDeniedHandler = accessDeniedHandler1;
     }
 
 
@@ -62,8 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .clearAuthentication(true)
                     .deleteCookies("JSESSIONID")
                     .logoutSuccessUrl("/")
-                .and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
         ;
 
     }
