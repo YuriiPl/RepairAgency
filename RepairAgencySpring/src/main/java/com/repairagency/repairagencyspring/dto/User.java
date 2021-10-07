@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
 public class User {
 
     @NotBlank
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{6,24}$", message = "wrongPassword")
+    @Pattern(regexp = "^(?=.*[a-zа-щьюяіїєґ])(?=.*[A-ZА-ЩЮЯІЇЄҐ])(?=.*\\d)[a-zA-Zа-щьюяіїєґА-ЩЮЯІЇЄҐ\\d]{6,24}$", message = "wrongPassword")
     private String password;
 
     @NotBlank
@@ -23,7 +23,7 @@ public class User {
     @Email(message = "wrongEmail")
     private String email;
 
-    @Pattern(regexp = "^[\\w\\d]+$", message = "wrongLogin")
+    @Pattern(regexp = "^[a-zA-Zа-щьюяіїєґА-ЩЮЯІЇЄҐ\\d]+$", message = "wrongLogin")
     @Size(min = 4, max = 24, message = "wrongLoginSize")
     private String login;
 
