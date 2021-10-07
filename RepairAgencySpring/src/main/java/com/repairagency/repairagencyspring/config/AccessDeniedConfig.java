@@ -19,6 +19,7 @@ public class AccessDeniedConfig implements AccessDeniedHandler {
                        AccessDeniedException e) throws IOException {
 
         //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");
+//        httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");
+        httpServletResponse.sendRedirect("/errors/403");
     }
 }

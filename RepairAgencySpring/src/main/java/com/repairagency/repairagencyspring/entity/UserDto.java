@@ -28,6 +28,7 @@ public class UserDto {
         this.userSex=user.getUserSex();
         this.userRole=user.getUserRole()==null?Role.USER:user.getUserRole();
         this.moneyCents=user.getMoneyCents()==null?0L:user.getMoneyCents();
+        this.locked=false;
     }
 
     @Id
@@ -60,5 +61,7 @@ public class UserDto {
     @Column(name = "cents")
     @PositiveOrZero(message = "wrongMoney")
     Long moneyCents;
+
+    private boolean locked;
 
 }

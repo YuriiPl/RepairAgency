@@ -57,8 +57,13 @@ public class SecurityUser implements UserDetails {
     }
 
     public static UserDetails fromUser(UserDto user){
-        return new org.springframework.security.core.userdetails.User(
-                user.getLogin(),user.getPassword(),user.getUserRole().getAuthorities()
-        );
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getLogin())
+                .password(user.getPassword())
+                .authorities(user.getUserRole().getAuthorities())
+                .accountLocked(user.isLocked()).build();
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getLogin(),user.getPassword(),user.getUserRole().getAuthorities()
+//        );
     }
 }

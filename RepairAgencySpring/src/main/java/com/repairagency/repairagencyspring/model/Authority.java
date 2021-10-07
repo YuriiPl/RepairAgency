@@ -7,8 +7,8 @@ public enum Authority {
 
     private final String authority;
 
-    Authority(String permission) {
-        this.authority = permission;
+    Authority(String authority) {
+        this.authority = authority;
     }
 
     public String getAuthority() {

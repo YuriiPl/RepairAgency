@@ -8,28 +8,77 @@
 
 <p th:utext="#{home.welcome}">Welcome!</p>
 
+<li sec:authorize="!isAuthenticated()"><a class="nav-link" href="/auth/login">Login</a></li>
 
-<span sec:authorize="isAuthenticated()">| Logged user: <span sec:authentication="name"></span> |
-                Roles: <span sec:authentication="principal.authorities"></span> |
-                <a th:href="@{/logout}">Sign Out</a>
-            </span>
+<div sec:authorize="${hasRole(#vars.expectedRole)}">
+    This will only be displayed if authenticated user has a role computed by the controller.
+</div>
 
-<div class="container">
+<!--This code is working th:text="${#authentication.getPrincipal().getFirstName()}"-->
+<!--${#authentication.getPrincipal().getSomeProperty()}-->
 
-    <div class="starter-template">
-        <h1>Admin page (Spring Security protected)</h1>
-        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-        </form>
 
-    </div>
+<!--<div sec:authorize="isAuthenticated()">-->
+<!--    Authenticated as <span sec:authentication="name"></span>-->
+<!--    <span th:text="${#authentication.getDetails()}"></span><span>-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</span><br>-->
+<!--    <span th:text="${#authentication.getPrincipal()}"></span><span>-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</span><br>-->
+<!--    <span th:text="${#authentication.getCredentials()}"></span><span>-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</span><br>-->
+<!--    <span th:text="${#authentication.getAuthorities()}"></span><span>-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</span><br>-->
+<!--</div>-->
 
-    <ul>
-        <li sec:authorize="isAnonymous()"><a class="nav-link" href="/login">Login</a></li>
-        <li sec:authorize="isAuthenticated()"><a class="nav-link" href="/logout">Logout</a></li>
-        <li sec:authorize="isAuthenticated()">Wellcome, <span sec:authentication="name"></span></li>
-    </ul>
+<!--Authenticated as Admin2 WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=DC3A9B79ED5CB77BEA79337B59A88F48]-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!--org.springframework.security.core.userdetails.User [Username=Admin2, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[perm:user]]-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!-- -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!--[perm:user]-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+
+<!--Authenticated as Admin2 org.springframework.security.core.userdetails.User [Username=Admin2, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[perm:user]]-->
+
+<!--<div sec:authorize="isAuthenticated()">-->
+<!--    This content is only shown to authenticated users.+++++++++++++++++++++-->
+<!--</div>-->
+<!--<div sec:authorize="hasRole('ROLE_ADMIN')">-->
+<!--    This content is only shown to administrators.-->
+<!--</div>-->
+<!--<div sec:authorize="hasRole('ROLE_USER')">-->
+<!--    This content is only shown to users.3333333333333333-->
+<!--</div>-->
+<!--<div sec:authorize="hasRole('USER')">-->
+<!--    This content is only shown to users.444444444444444444444444-->
+<!--</div>-->
+<!--<div sec:authorize="hasAuthority('AUTHORITY_USER')">-->
+<!--    This content is only shown to administrators22222222222222.-->
+<!--</div>-->
+<!--<div sec:authorize="hasAuthority('perm:user')">-->
+<!--    This content is only shown to users111111111111111111111.++++++++++++++++++++++-->
+<!--</div>-->
+
+
+
+<!--<div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">-->
+<!--    This will only be displayed if authenticated user has role ROLE_ADMIN.-->
+<!--</div>-->
+
+<!--<span sec:authorize="isAuthenticated()">| Logged user: <span sec:authentication="name"></span> |-->
+<!--                Roles: <span sec:authentication="principal.authorities"></span> |-->
+<!--                <a th:href="@{/logout}">Sign Out</a>-->
+<!--            </span>-->
+
+<!--<div class="container">-->
+
+<!--    <div class="starter-template">-->
+<!--        <h1>Admin page (Spring Security protected)</h1>-->
+<!--        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>-->
+<!--        <form th:action="@{/auth/logout}" method="post">-->
+<!--            <input type="submit" value="Sign Out"/>-->
+<!--        </form>-->
+
+<!--    </div>-->
+
+<!--    <ul>-->
+<!--        <li sec:authorize="isAnonymous()"><a class="nav-link" href="/login">Login</a></li>-->
+<!--        <li sec:authorize="isAuthenticated()"><a class="nav-link" href="/logout">Logout</a></li>-->
+<!--        <li sec:authorize="isAuthenticated()">Wellcome, <span sec:authentication="name"></span></li>-->
+<!--    </ul>-->
 
 
     <!--</div>-->
