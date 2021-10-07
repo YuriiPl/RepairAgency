@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
@@ -38,11 +40,19 @@ public class RegFormController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public void registrationFormController(@Valid User user){
-        userRepo.save(new UserDto(user, passwordEncoder));
-        log.info("{}", user);
+    public String registrationFormController(@Valid User user, BindingResult br, Model model){
+        if(br.hasErrors()){
+            Set<String> attributes = br.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toSet());
+            model.addAttribute("errors",attributes);
+            model.addAttribute("user",user);
+            return "api/reg_form";
+        } else {
+            userRepo.save(new UserDto(user, passwordEncoder));
+            log.info("{}", user);
+        }
+        return "redirect:/auth/login";
     }
 
     @GetMapping("/register")
