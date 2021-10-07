@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:lang="${#locale.language}">
+<head th:replace="~{layouts/common :: head}" >
+    <title>None</title>
+</head>
+<body>
+<div th:replace="~{layouts/common :: header}"></div>
+
+
+
+<!--<div class="d-flex justify-content-center align-items-center" style="height:300px">-->
+<!--        <p th:utext="#{home.welcome}">Welcome!</p>-->
+<!--</div>-->
+
+<iframe src="/account/user" allow sandbox="allow-same-origin" width="100%" height="400px"></iframe>
+<iframe src="/account/repairer" allow sandbox="allow-same-origin" width="100%" height="400px"></iframe>
+<iframe src="/account/manager" allow sandbox="allow-same-origin" width="100%" height="400px"></iframe>
+
+
+<div th:replace="~{layouts/common :: footer}"></div>
+
+</body>
+</html>

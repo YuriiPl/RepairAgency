@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public enum Role {
     USER(Collections.singletonList(Authority.AUTHORITY_USER)),
     WORKER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_WORKER)),
-    ADMIN(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_ADMIN));
+    MANAGER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_ADMIN));
 
     private final List<Authority> authorities;
 

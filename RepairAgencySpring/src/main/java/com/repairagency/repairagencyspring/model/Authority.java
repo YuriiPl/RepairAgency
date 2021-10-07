@@ -2,7 +2,7 @@ package com.repairagency.repairagencyspring.model;
 
 public enum Authority {
     AUTHORITY_USER("perm:user"),
-    AUTHORITY_WORKER("perm:worker"),
+    AUTHORITY_WORKER("perm:repairer"),
     AUTHORITY_ADMIN("perm:admin");
 
     private final String authority;
