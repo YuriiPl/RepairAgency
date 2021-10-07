@@ -77,12 +77,14 @@
         <div class="form-group">
             <label for="user-login" th:text="#{regform.login}">regform login</label>
             <input required type="text" class="form-control" id="user-login" name="login" th:placeholder="#{regform.placeholder.login}"/>
+            <small th:text="#{regform.wrongUsername}"></small>
         </div>
         <div class="form-group">
             <label for="user-passwd" th:text="#{regform.password}">reg form password</label>
             <input required type="password" class="form-control" id="user-passwd" name="password" th:placeholder="#{regform.placeholder.password}"/>
             <label for="user-passwd-repeat" th:text="#{regform.password.repeat}">reg form password repeat</label>
             <input required type="password" class="form-control" id="user-passwd-repeat" th:placeholder="#{regform.placeholder.password.repeat}"/>
+            <small th:text="#{regform.wrongPassword}"></small>
         </div>
             <button type="submit" class="btn btn-primary" th:text="#{regform.submit}">Submit</button>
         </form>
