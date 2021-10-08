@@ -10,19 +10,21 @@ import java.util.stream.Collectors;
 
 
 public enum Role {
-    USER(Collections.singletonList(Authority.AUTHORITY_USER)),
-    WORKER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_WORKER)),
-    MANAGER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_ADMIN));
+    USER(Collections.singletonList(Authority.AUTHORITY_USER), "account/user"),
+    REPAIRER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_REPAIRER), "account/repairer"),
+    MANAGER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_MANAGER), "account/manager");
 
     private final List<Authority> authorities;
+    private final String homePage;
 
-    Role(List<Authority> authorities) {
+    Role(List<Authority> authorities, String homePage) {
         this.authorities = authorities;
+        this.homePage = homePage;
     }
 
-//    public Set<Permission> getPermissions() {
-//        return new HashSet<>(permissions);
-//    }
+    public String getHomePage() {
+        return homePage;
+    }
 
     public Set<SimpleGrantedAuthority> getAuthorities(){
         return authorities

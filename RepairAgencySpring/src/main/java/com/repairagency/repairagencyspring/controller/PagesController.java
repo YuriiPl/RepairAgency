@@ -1,23 +1,36 @@
 package com.repairagency.repairagencyspring.controller;
 
 
-import lombok.extern.log4j.Log4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.repairagency.repairagencyspring.entity.UserDto;
+import com.repairagency.repairagencyspring.repos.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 
+@Slf4j
 @Controller
 public class PagesController {
+
+    final
+    UserRepository userRepository;
+
+    public PagesController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @GetMapping("/")
-    public String mainPage(HttpServletRequest request, Model model)
+    public String mainPage(Authentication authentication)
     {
+        if(authentication != null) {
+            final Optional<UserDto> user = userRepository.findByLogin(authentication.getName());
+            if(user.isPresent()){
+                return "redirect:"+user.get().getUserRole().getHomePage();
+            }
+        }
         return "index";
     }
 
