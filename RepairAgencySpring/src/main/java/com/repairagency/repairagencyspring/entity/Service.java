@@ -10,13 +10,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @ToString
-@Entity(name="TaskInfo")
-public class TaskInfo {
+@Entity(name="Service")
+public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 }

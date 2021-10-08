@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 @Entity(name="Tasks")
-public class Tasks {
+public class Services {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,7 +23,7 @@ public class Tasks {
 
     private Long repairerId;
 
-    private Long taskInfoId;
+    private Long serviceId;
 
     private WorkStatus workStatus;
 

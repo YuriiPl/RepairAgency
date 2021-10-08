@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 
 public enum Role {
-    USER(Collections.singletonList(Authority.AUTHORITY_USER), "account/user"),
-    REPAIRER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_REPAIRER), "account/repairer"),
-    MANAGER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_MANAGER), "account/manager");
+    USER(Collections.singletonList(Authority.AUTHORITY_USER), "/account/user"),
+    REPAIRER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_REPAIRER), "/account/repairer"),
+    MANAGER(Arrays.asList(Authority.AUTHORITY_USER, Authority.AUTHORITY_MANAGER), "/account/manager");
 
     private final List<Authority> authorities;
     private final String homePage;
