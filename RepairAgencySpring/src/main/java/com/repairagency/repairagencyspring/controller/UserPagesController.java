@@ -38,11 +38,5 @@ public class UserPagesController {
         return "account/repairer/mainpage";
     }
 
-    @PreAuthorize("hasAuthority('perm:manager')")
-    @GetMapping("/manager")
-    public String managerPage(HttpServletRequest request, Model model)
-    {
-        return "account/manager/mainpage";
-    }
 
 }
