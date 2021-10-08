@@ -19,7 +19,12 @@ public class UserPagesController {
         return "account/testpage";
     }
 
-    @PreAuthorize("hasAnyAuthority('perm:user','perm:worker','perm:admin')")
+    @GetMapping("/whoami")
+    public String whoAmIPage(){
+        return "account/whoami";
+    }
+
+    @PreAuthorize("hasAnyAuthority('perm:user','perm:worker','perm:manager')")
     @GetMapping("/user")
     public String userPage(HttpServletRequest request, Model model)
     {
@@ -33,7 +38,7 @@ public class UserPagesController {
         return "account/repairer/mainpage";
     }
 
-    @PreAuthorize("hasAuthority('perm:admin')")
+    @PreAuthorize("hasAuthority('perm:manager')")
     @GetMapping("/manager")
     public String managerPage(HttpServletRequest request, Model model)
     {
