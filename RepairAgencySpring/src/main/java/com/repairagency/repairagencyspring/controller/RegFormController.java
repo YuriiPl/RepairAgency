@@ -5,6 +5,7 @@ import com.repairagency.repairagencyspring.dto.User;
 import com.repairagency.repairagencyspring.entity.UserDto;
 import com.repairagency.repairagencyspring.repos.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -49,8 +50,15 @@ public class RegFormController {
             model.addAttribute("user",user);
             return "api/reg_form";
         } else {
-            userRepo.save(new UserDto(user, passwordEncoder));
-            log.info("{}", user);
+            try {
+                userRepo.save(new UserDto(user, passwordEncoder));
+                log.info("{}", user);
+            } catch (DataIntegrityViolationException ex){
+                log.warn("{}",ex.toString());
+                model.addAttribute("errors",Collections.singleton("user_email_exist"));
+                model.addAttribute("user",user);
+                return "api/reg_form";
+            }
         }
         return "redirect:/auth/login";
     }
@@ -60,24 +68,24 @@ public class RegFormController {
         return "api/reg_form";
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String,Set<String>>> handleConstraintViolationException(DataIntegrityViolationException ex) {
-        log.warn("{} {}", ex.getClass(), ex.getLocalizedMessage());
-        return new ResponseEntity<>(Collections.singletonMap("message",Collections.singleton("user_email_exist")), HttpStatus.CONFLICT);
-    }
+//    @ExceptionHandler(DataIntegrityViolationException.class)
+//    public ResponseEntity<Map<String,Set<String>>> handleConstraintViolationException(DataIntegrityViolationException ex) {
+//        log.warn("{} {}", ex.getClass(), ex.getLocalizedMessage());
+//        return new ResponseEntity<>(Collections.singletonMap("message",Collections.singleton("user_email_exist")), HttpStatus.CONFLICT);
+//    }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String,Set<String>>> handleRuntimeException(ConstraintViolationException ex) {
-        log.warn("{} {}", ex.getClass(), ex.getLocalizedMessage());
-        Set<String> collect = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet());
-        return new ResponseEntity<>(Collections.singletonMap("message",collect), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public ResponseEntity<Map<String,Set<String>>> handleRuntimeException(ConstraintViolationException ex) {
+//        log.warn("{} {}", ex.getClass(), ex.getLocalizedMessage());
+//        Set<String> collect = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet());
+//        return new ResponseEntity<>(Collections.singletonMap("message",collect), HttpStatus.BAD_REQUEST);
+//    }
 
-    @ExceptionHandler(BindException.class)
-    public ResponseEntity<Map<String,Set<String>>> handleBindExceptionException(BindException ex) {
-        log.warn("{} {}", ex.getClass(), ex.getLocalizedMessage());
-        Set<String> collect = ex.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toSet());
-        return new ResponseEntity<>(Collections.singletonMap("message",collect), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(BindException.class)
+//    public ResponseEntity<Map<String,Set<String>>> handleBindExceptionException(BindException ex) {
+//        log.warn("{} {}", ex.getClass(), ex.getLocalizedMessage());
+//        Set<String> collect = ex.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toSet());
+//        return new ResponseEntity<>(Collections.singletonMap("message",collect), HttpStatus.BAD_REQUEST);
+//    }
 
 }
