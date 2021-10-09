@@ -1,7 +1,7 @@
 package com.repairagency.repairagencyspring.dto;
 
 import com.repairagency.repairagencyspring.entity.UserSex;
-import com.repairagency.repairagencyspring.model.Role;
+import com.repairagency.repairagencyspring.security.Role;
 import lombok.*;
 import javax.validation.constraints.*;
 

@@ -1,7 +1,7 @@
 package com.repairagency.repairagencyspring.entity;
 
 import com.repairagency.repairagencyspring.dto.UserDTO;
-import com.repairagency.repairagencyspring.model.Role;
+import com.repairagency.repairagencyspring.security.Role;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
