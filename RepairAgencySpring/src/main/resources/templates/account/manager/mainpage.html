@@ -14,7 +14,7 @@
             <table class="table table-striped table-bordered table-hover">
                 <tr>
                     <th>#</th>
-                    <th>NAME</th>
+                    <th th:text="#{manager.table.service.name}">NAME</th>
                 </tr>
                 <tr th:each="service,iterStat : ${services}">
                     <td th:text="${iterStat.index}">index</td>
@@ -26,7 +26,8 @@
                 <div class="form-group">
                     <label for="add-service" th:text="#{manager.formservice.addService}">Service</label>
                     <input required class="form-control" id="add-service" name="serviceName" th:placeholder="#{manager.formservice.addService.placeholder}"/>
-                    <small style="color:red" th:if="${errorServiceExists ne null}" th:text="#{manager.formservice.service.exiists}"></small>
+                    <small style="color:red" th:if="${saveDbError ne null}" th:text="#{manager.formservice.service.exiists}"></small>
+                    <small style="color:red" th:if="${validateError ne null}" th:text="#{manager.formservice.service.wrongName}"></small>
                 </div>
                 <button type="submit" class="btn btn-primary" th:text="#{manager.formservice.submit}">Submit</button>
             </form>
