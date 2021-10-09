@@ -1,5 +1,6 @@
 package com.repairagency.repairagencyspring.dto;
 
+import com.repairagency.repairagencyspring.entity.UserSex;
 import com.repairagency.repairagencyspring.model.Role;
 import lombok.*;
 import javax.validation.constraints.*;
@@ -10,7 +11,7 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class User {
+public class UserDTO {
 
     @NotBlank
     @Pattern(regexp = "^(?=.*[a-zа-щьюяіїєґ])(?=.*[A-ZА-ЩЮЯІЇЄҐ])(?=.*\\d)[a-zA-Zа-щьюяіїєґА-ЩЮЯІЇЄҐ\\d]{6,24}$", message = "wrongPassword")

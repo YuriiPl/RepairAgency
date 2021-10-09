@@ -1,7 +1,7 @@
 package com.repairagency.repairagencyspring.controller;
 
 
-import com.repairagency.repairagencyspring.entity.UserDto;
+import com.repairagency.repairagencyspring.entity.UserDB;
 import com.repairagency.repairagencyspring.repos.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -26,7 +26,7 @@ public class PagesController {
     public String mainPage(Authentication authentication)
     {
         if(authentication != null) {
-            final Optional<UserDto> user = userRepository.findByLogin(authentication.getName());
+            final Optional<UserDB> user = userRepository.findByLogin(authentication.getName());
             if(user.isPresent()){
                 return "redirect:"+user.get().getUserRole().getHomePage();
             }

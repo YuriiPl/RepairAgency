@@ -1,7 +1,6 @@
 package com.repairagency.repairagencyspring.entity;
 
-import com.repairagency.repairagencyspring.dto.User;
-import com.repairagency.repairagencyspring.dto.UserSex;
+import com.repairagency.repairagencyspring.dto.UserDTO;
 import com.repairagency.repairagencyspring.model.Role;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,17 +16,17 @@ import javax.validation.constraints.*;
 @Builder
 @ToString
 @Entity(name = "user") // This tells Hibernate to make a table out of this class
-public class UserDto {
+public class UserDB {
 
-    public UserDto(User user, PasswordEncoder passwordEncoder){
-        this.password=passwordEncoder.encode(user.getPassword());
-        this.name=user.getName();
-        this.email=user.getEmail();
-        this.login=user.getLogin();
-        this.acceptNewsLatter=user.isAcceptNewsLatter();
-        this.userSex=user.getUserSex();
-        this.userRole=user.getUserRole()==null?Role.USER:user.getUserRole();
-        this.moneyCents=user.getMoneyCents()==null?0L:user.getMoneyCents();
+    public UserDB(UserDTO userDTO, PasswordEncoder passwordEncoder){
+        this.password=passwordEncoder.encode(userDTO.getPassword());
+        this.name= userDTO.getName();
+        this.email= userDTO.getEmail();
+        this.login= userDTO.getLogin();
+        this.acceptNewsLatter= userDTO.isAcceptNewsLatter();
+        this.userSex= userDTO.getUserSex();
+        this.userRole= userDTO.getUserRole()==null?Role.USER: userDTO.getUserRole();
+        this.moneyCents= userDTO.getMoneyCents()==null?0L: userDTO.getMoneyCents();
         this.locked=false;
     }
 

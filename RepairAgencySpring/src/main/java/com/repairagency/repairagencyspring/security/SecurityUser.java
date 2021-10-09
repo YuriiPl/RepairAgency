@@ -1,7 +1,6 @@
 package com.repairagency.repairagencyspring.security;
 
-import com.repairagency.repairagencyspring.dto.User;
-import com.repairagency.repairagencyspring.entity.UserDto;
+import com.repairagency.repairagencyspring.entity.UserDB;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -56,7 +54,7 @@ public class SecurityUser implements UserDetails {
         return true;
     }
 
-    public static UserDetails fromUser(UserDto user){
+    public static UserDetails fromUser(UserDB user){
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getLogin())
                 .password(user.getPassword())
