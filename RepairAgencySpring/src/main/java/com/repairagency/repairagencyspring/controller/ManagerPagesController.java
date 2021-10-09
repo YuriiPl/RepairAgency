@@ -1,18 +1,21 @@
 package com.repairagency.repairagencyspring.controller;
 
+import com.repairagency.repairagencyspring.dto.ServiceDTO;
 import com.repairagency.repairagencyspring.entity.Service;
+import com.repairagency.repairagencyspring.model.RepoSaver;
 import com.repairagency.repairagencyspring.repos.ServiceRepository;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
-
+@Slf4j
 @Controller
 @PreAuthorize("hasAuthority('perm:manager')")
 @RequestMapping(value = "/account/")
@@ -33,18 +36,9 @@ public class ManagerPagesController {
     }
 
     @PostMapping("managerAddService")
-    public ModelAndView managerPageAddService(@RequestParam(name = "serviceName", required = true) String serviceName, RedirectAttributes redirectAttributes)
+    public ModelAndView managerPageAddService(@Valid ServiceDTO ServiceDTO, BindingResult br, RedirectAttributes redirectAttributes)
     {
-        ModelAndView modelAndView = new ModelAndView();
-        try {
-            serviceRepository.save(new Service(0L, serviceName));
-        } catch (Exception ex){
-            redirectAttributes.addFlashAttribute("errorServiceExists",true);
-        }
-        RedirectView redirectView = new RedirectView("manager");
-        redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
-        modelAndView.setView(redirectView);
-        return modelAndView;
+        return RepoSaver.save(serviceRepository,new Service(ServiceDTO),"manager",br,redirectAttributes);
     }
 
 //    @RequestMapping(value = "/secondPage", method = RequestMethod.POST)
