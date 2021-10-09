@@ -1,4 +1,4 @@
-package com.repairagency.repairagencyspring.model;
+package com.repairagency.repairagencyspring.security;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

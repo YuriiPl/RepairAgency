@@ -1,4 +1,4 @@
-package com.repairagency.repairagencyspring.model;
+package com.repairagency.repairagencyspring.security;
 
 public enum Authority {
     AUTHORITY_USER("perm:user"),
