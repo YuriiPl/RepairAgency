@@ -12,12 +12,12 @@
         <h1 th:text="#{regform.title}">title</h1>
         <form th:action="@{/api/register}" name="sendForm" method="post">
         <div class="form-group">
-            <label for="user-name" th:text="#{regform.yourname}">your name</label>
+            <b><label for="user-name" th:text="#{regform.yourname}">your name</label></b>
             <input required type="text" class="form-control" id="user-name" name="name" th:value="${user ne null}?${user.getName()}:''"  th:placeholder="#{regform.placeholder.yourname}"/>
             <small th:text="#{regform.wrongUsername}" th:style="${errors ne null and #sets.contains(errors,'wrongUsername')}?'color:red':''"></small>
         </div>
         <div class="form-group">
-            <span th:text="#{regform.sex}">sex:</span>
+            <b><span th:text="#{regform.sex}">sex:</span></b>
             <input type="radio" id="contactChoice1" name="userSex" value="MALE" checked/>
             <label for="contactChoice1" th:text="#{regform.male}">male</label>
             <input type="radio" id="contactChoice2" name="userSex" value="FEMALE"/>
@@ -27,7 +27,7 @@
             <small style="color:red" th:if="${errors ne null and #sets.contains(errors,'wrongGender')}" th:text="#{regform.wrongGender}"></small>
         </div>
         <div class="form-group">
-            <label for="user-email" th:text="#{regform.email}">e-mail</label>
+            <b><label for="user-email" th:text="#{regform.email}">e-mail</label></b>
             <input required type="email" class="form-control" id="user-email" name="email" aria-describedby="emailHelp" th:value="${user ne null}?${user.getEmail()}:''" th:placeholder="#{regform.placeholder.email}"/>
             <small id="emailHelp" class="form-text text-muted" th:text="#{regform.email.noshare}">email.noshare</small>
             <small style="color:red" th:if="${errors ne null and #sets.contains(errors,'wrongEmail')}" th:text="#{regform.wrongEmail}"></small>
@@ -38,17 +38,24 @@
             <label class="form-check-label" for="chkBxAccept" th:text="#{regform.chkbx.accept}">checkbox accept</label>
         </div>
         <div class="form-group">
-            <label for="user-login" th:text="#{regform.login}">regform login</label>
+            <b><label for="user-login" th:text="#{regform.login}">regform login</label></b>
             <input required type="text" class="form-control" id="user-login" name="login" th:value="${user ne null}?${user.getLogin()}:''" th:placeholder="#{regform.placeholder.login}"/>
             <small style="color:red" th:if="${errors ne null and #sets.contains(errors,'wrongLoginSize')}" th:text="#{regform.wrongLoginSize}"></small>
             <small style="color:red" th:if="${errors ne null and #sets.contains(errors,'wrongLogin')}" th:text="#{regform.wrongLogin}"></small>
         </div>
         <div class="form-group">
-            <label for="user-passwd" th:text="#{regform.password}">reg form password</label>
+            <b><label for="user-passwd" th:text="#{regform.password}">reg form password</label></b>
             <input required type="password" class="form-control" id="user-passwd" name="password" th:value="${user ne null}?${user.getPassword()}:''" th:placeholder="#{regform.placeholder.password}"/>
-            <label for="user-passwd-repeat" th:text="#{regform.password.repeat}">reg form password repeat</label>
-            <input required type="password" class="form-control" id="user-passwd-repeat" th:value="${user ne null}?${user.getPassword()}:''" th:placeholder="#{regform.placeholder.password.repeat}"/>
             <small th:text="#{regform.wrongPassword}" th:style="${errors ne null and #sets.contains(errors,'wrongPassword')}?'color:red':''"></small>
+        </div>
+        <div class="form-group">
+            <b><span th:text="#{regform.roles}">sex:</span></b>
+            <input type="radio" id="user" value="USER" name="userRole" checked>
+            <label for="user" th:text="#{regform.user}">USER</label>
+            <input type="radio" id="manager" value="MANAGER" name="userRole">
+            <label for="manager" th:text="#{regform.manager}">MANAGER</label>
+            <input type="radio" id="repairer" value="REPAIRER" name="userRole">
+            <label for="repairer" th:text="#{regform.repairer}">REPAIRER</label>
         </div>
             <button type="submit" class="btn btn-primary" th:text="#{regform.submit}">Submit</button>
         </form>
