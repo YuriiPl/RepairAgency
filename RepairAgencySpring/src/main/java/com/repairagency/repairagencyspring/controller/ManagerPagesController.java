@@ -38,11 +38,20 @@ public class ManagerPagesController {
 
 
     @GetMapping("manager")
-    public String managerPage( Model model)
+    public String managerPage( @PageableDefault(page = 0, size = 10)
+                                   @SortDefault.SortDefaults({
+                                           @SortDefault(sort = "name", direction = Sort.Direction.ASC),
+                                           @SortDefault(sort = "id", direction = Sort.Direction.DESC)
+                                   })
+                                           Pageable pageable,Model model)
     {
 
-        Iterable<Service> all = serviceRepository.findAll();
-        model.addAttribute("services",all);
+        Page<Service> page = serviceRepository.findAll(pageable);
+
+//        page.getNumber()
+
+        model.addAttribute("page",page);
+        model.addAttribute("url","manager");
         return "account/manager/mainpage";
     }
 
