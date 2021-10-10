@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 public class ServiceDTO {
 
     @NotBlank(message = "wrongName")
-    @Pattern(regexp = "^(?! )(?!.* $)(?!(?:.* ){2})[\\da-zA-Zа-щьюяіїєґА-ЩЮЯІЇЄҐ ']{2,128}$", message = "wrongName")
+    @Pattern(regexp = "^(?! )(?!.* $)[\\da-zA-Zа-щьюяіїєґА-ЩЮЯІЇЄҐ ')(№#%]{2,128}$", message = "wrongName")
     private String serviceName;
 
     @Override

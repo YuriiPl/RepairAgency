@@ -11,7 +11,7 @@
         <div>Manager</div>
         <div style="height: auto; margin:auto 20%;text-align:center">
 
-            <form th:action="@{/account/managerAddService}" name="sendForm" method="post">
+            <form th:action="@{/account/managerAddService(page=${page.getNumber()},size=${page.getSize()})}" name="sendForm" method="post">
                 <div class="form-group">
                     <h1>
                         <label for="add-service" th:text="#{manager.formservice.addService}">Service</label>
