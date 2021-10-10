@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="pager(turl,tpage)">
+<!--    <div th:text="|pager ${turl} ${tpage}|"></div>-->
+<!--    <div th:text="|pager ${tpage.getNumber()} ${tpage.getNumberOfElements()}|"></div>-->
+
+<!--    <nav aria-label="Page navigation">-->
+<!--        <ul class="pagination justify-content-center">-->
+<!--            <li class="page-item disabled"><a class="page-link">Previous</a></li>-->
+<!--            <li class="page-item">         <a class="page-link" href="#">1</a></li>-->
+<!--            <li class="page-item active">  <span class="page-link">2</span></li>-->
+<!--            <li class="page-item">         <a class="page-link" href="#">3</a></li>-->
+<!--            <li class="page-item">         <a class="page-link" href="#">Next</a></li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+
+
+    <nav aria-label="Page navigation">
+        <!--    justify-content-center-->
+        <ul class="pagination">
+            <li class="page-item disabled">
+                <span class="page-link" th:text="#{pager.pages}"></span>
+            </li>
+<!--            <li class="page-item disabled"><a class="page-link">&DoubleLeftArrow;</a></li>-->
+            <th:block th:each="p: ${#numbers.sequence(1, tpage.getTotalPages())}">
+                    <li th:if="${(p-1) eq tpage.getNumber()}" class="page-item active">
+                        <span class="page-link" th:text="${p}"></span>
+                    </li>
+                    <li th:unless="${(p-1) eq tpage.getNumber()}" class="page-item">
+                        <a class="page-link" th:href="@{|${turl}?page=${p-1}&size=${page.getSize()}|}" th:text="${p}"></a>
+                    </li>
+            </th:block>
+<!--            <li class="page-item disabled"><a class="page-link">&DoubleRightArrow;</a></li>-->
+        </ul>
+
+        <ul class="pagination">
+            <li class="page-item disabled">
+                <span class="page-link" th:text="#{pager.numberOfItems}"></span>
+            </li>
+<!--            <li class="page-item disabled"><a class="page-link">&DoubleLeftArrow;</a></li>-->
+            <th:block th:each="c: ${T(java.util.Arrays).asList(10,25,50,75,100)}">
+                <li th:if="${c eq tpage.getSize()}" class="page-item active">
+                    <span class="page-link" th:text="${c}"></span>
+                </li>
+                <li th:unless="${c eq tpage.getSize()}" class="page-item">
+                    <a class="page-link" th:href="@{|${turl}?page=${(page.getNumber() gt page.getTotalElements()/c)?(page.getTotalElements()/c):page.getNumber()}&size=${c}|}" th:text="${c}"></a>
+                </li>
+            </th:block>
+<!--            <li class="page-item disabled"><a class="page-link">&DoubleRightArrow;</a></li>-->
+        </ul>
+
+<!--        <li th:unless="${c eq tpage.getSize()}" class="page-item" th:classappend="${c eq tpage.getNumber()}?active">-->
+
+
+    </nav>
+
+</div>
+</body>
+</html>

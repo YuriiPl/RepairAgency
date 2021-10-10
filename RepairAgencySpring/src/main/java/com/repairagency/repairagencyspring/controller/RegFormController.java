@@ -1,29 +1,21 @@
 package com.repairagency.repairagencyspring.controller;
 
 
-import com.repairagency.repairagencyspring.dto.User;
-import com.repairagency.repairagencyspring.entity.UserDto;
+import com.repairagency.repairagencyspring.dto.UserDTO;
+import com.repairagency.repairagencyspring.entity.UserDB;
 import com.repairagency.repairagencyspring.repos.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,20 +35,20 @@ public class RegFormController {
 
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registrationFormController(@Valid User user, BindingResult br, Model model){
+    public String registrationFormController(@Valid UserDTO userDTO, BindingResult br, Model model){
         if(br.hasErrors()){
             Set<String> attributes = br.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toSet());
             model.addAttribute("errors",attributes);
-            model.addAttribute("user",user);
+            model.addAttribute("user", userDTO);
             return "api/reg_form";
         } else {
             try {
-                userRepo.save(new UserDto(user, passwordEncoder));
-                log.info("{}", user);
+                userRepo.save(new UserDB(userDTO, passwordEncoder));
+                log.info("{}", userDTO);
             } catch (DataIntegrityViolationException ex){
                 log.warn("{}",ex.toString());
                 model.addAttribute("errors",Collections.singleton("user_email_exist"));
-                model.addAttribute("user",user);
+                model.addAttribute("user", userDTO);
                 return "api/reg_form";
             }
         }

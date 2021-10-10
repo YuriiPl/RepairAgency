@@ -9,31 +9,53 @@
 <div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
     <div class="container">
         <div>Manager</div>
-        <div style="height: auto; margin:10% auto;text-align:center">
+        <div style="height: auto; margin:auto 20%;text-align:center">
 
-            <table class="table table-striped table-bordered table-hover">
-                <tr>
-                    <th>#</th>
-                    <th>NAME</th>
-                </tr>
-                <tr th:each="service,iterStat : ${services}">
-                    <td th:text="${iterStat.index}">index</td>
-                    <td th:text="${service.name}">mane</td>
-                </tr>
-            </table>
-
-            <form th:action="@{/account/managerAddService}" name="sendForm" method="post">
+            <form th:action="@{/account/managerAddService(page=${page.getNumber()},size=${page.getSize()})}" name="sendForm" method="post">
                 <div class="form-group">
-                    <label for="add-service" th:text="#{manager.formservice.addService}">Service</label>
-                    <input required class="form-control" id="add-service" name="serviceName" th:placeholder="#{manager.formservice.addService.placeholder}"/>
-                    <small style="color:red" th:if="${errorServiceExists ne null}" th:text="#{manager.formservice.service.exiists}"></small>
+                    <h1>
+                        <label for="add-service" th:text="#{manager.formservice.addService}">Service</label>
+                    </h1>
+                    <div>
+                        <small style="color:red" th:if="${saveDbError ne null}" th:text="#{manager.formservice.service.exiists}"></small>
+                        <small style="color:red" th:if="${validateError ne null}" th:text="#{manager.formservice.service.wrongName}"></small>
+                    </div>
+                    <div class="row" style="--bs-gutter-x:0">
+                            <input required class="form-control col-sm" id="add-service" name="serviceName" th:placeholder="#{manager.formservice.addService.placeholder}"/>
+                            <button type="submit" class="btn btn-primary col-md-auto" th:text="#{manager.formservice.submit}">Submit</button>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary" th:text="#{manager.formservice.submit}">Submit</button>
             </form>
 
+            <div style="margin-top: 10px">
+                <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+                <table class="table table-striped table-bordered table-hover">
+                    <colgroup>
+                        <col span="1" style="width: 5%;">
+                        <col span="1">
+                        <col span="1" style="width: 10%;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th th:text="#{manager.table.service.name}">NAME</th>
+                            <th th:text="#{manager.table.service.remove}">x</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="service,iterStat : ${page.content}">
+                            <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
+                            <td th:text="${service.name}">name</td>
+                            <td><button type="button" class="btn-close" aria-label="Close" th:attr="onclick=|location='service/${service.id}/rm?page=${page.getNumber()}&size=${page.getSize()}'|"></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+            </div>
         </div>
     </div>
 </div>
+
 
 <div th:replace="~{layouts/common :: footer}"></div>
 

@@ -1,18 +1,29 @@
 package com.repairagency.repairagencyspring.controller;
 
+import com.repairagency.repairagencyspring.dto.ServiceDTO;
 import com.repairagency.repairagencyspring.entity.Service;
+import com.repairagency.repairagencyspring.model.RepoRedirectService;
 import com.repairagency.repairagencyspring.repos.ServiceRepository;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
-
+@Slf4j
 @Controller
 @PreAuthorize("hasAuthority('perm:manager')")
 @RequestMapping(value = "/account/")
@@ -24,28 +35,34 @@ public class ManagerPagesController {
         this.serviceRepository = serviceRepository;
     }
 
+
     @GetMapping("manager")
-    public String managerPage(HttpServletRequest request, Model model)
+    public String managerPage( @PageableDefault(page = 0, size = 10)
+                                   @SortDefault.SortDefaults({
+                                           @SortDefault(sort = "name", direction = Sort.Direction.ASC),
+                                           @SortDefault(sort = "id", direction = Sort.Direction.DESC)
+                                   })
+                                           Pageable pageable,Model model)
     {
-        Iterable<Service> all = serviceRepository.findAll();
-        model.addAttribute("services",all);
+        Page<Service> page = serviceRepository.findAll(pageable);
+        model.addAttribute("page",page);
+        model.addAttribute("url","manager");
         return "account/manager/mainpage";
     }
 
     @PostMapping("managerAddService")
-    public ModelAndView managerPageAddService(@RequestParam(name = "serviceName", required = true) String serviceName, RedirectAttributes redirectAttributes)
+    public String managerPageAddService(@Valid ServiceDTO ServiceDTO, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes)
     {
-        ModelAndView modelAndView = new ModelAndView();
-        try {
-            serviceRepository.save(new Service(0L, serviceName));
-        } catch (Exception ex){
-            redirectAttributes.addFlashAttribute("errorServiceExists",true);
-        }
-        RedirectView redirectView = new RedirectView("manager");
-        redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
-        modelAndView.setView(redirectView);
-        return modelAndView;
+        return RepoRedirectService.save(serviceRepository,new Service(ServiceDTO),"manager",br, request,redirectAttributes);
     }
+
+    @GetMapping("service/{id}/rm")
+    public String managerPageRmService(@PathVariable("id") Long id, HttpServletRequest request, RedirectAttributes redirectAttributes)
+    {
+        return RepoRedirectService.removeById(serviceRepository, id,"../../manager",request,redirectAttributes);
+    }
+
+
 
 //    @RequestMapping(value = "/secondPage", method = RequestMethod.POST)
 //    public ModelAndView checkUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {

@@ -1,7 +1,8 @@
 package com.repairagency.repairagencyspring.repos;
 
 import com.repairagency.repairagencyspring.entity.Service;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface ServiceRepository  extends JpaRepository<Service,Long> {
+public interface ServiceRepository  extends PagingAndSortingRepository<Service,Long> {
+
 }
