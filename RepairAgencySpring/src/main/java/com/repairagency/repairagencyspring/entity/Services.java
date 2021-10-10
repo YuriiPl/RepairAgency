@@ -32,4 +32,6 @@ public class Services {
     private LocalDateTime dateCreate;
 
     private LocalDateTime dateFinish;
+
+    private long price;
 }
