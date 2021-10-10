@@ -37,7 +37,18 @@
 <div th:fragment="footer">
     <div class="fixed-bottom">
         <span class="float-start">© 2021 The Best Repair Agency (TheBRA)</span>
-        <span th:utext="#{home.today.is(${today})}" class="float-end">Today is:</span>
+<!--        <th:block th:with="clazz=${T(java.time.format.DateTimeFormatter)},-->
+<!--          style=${T(java.time.format.FormatStyle).LONG},-->
+<!--          zone=${T(java.time.ZoneId).systemDefault()},-->
+<!--          formatter=${clazz.ofLocalizedDateTime(style).withLocale(#locale).withZone(zone)}">-->
+<!--            <span th:text="#{home.today.is(${formatter.format(T(java.time.Instant).now())})}" class="float-end"/>-->
+<!--        </th:block>-->
+        <th:block th:with="clazz=${T(java.time.format.DateTimeFormatter)},
+          style=${T(java.time.format.FormatStyle).FULL},
+          zone=${T(java.time.ZoneId).systemDefault()},
+          formatter=${clazz.ofLocalizedDate(style).withLocale(#locale).withZone(zone)}">
+            <span th:text="#{home.today.is(${formatter.format(T(java.time.Instant).now())})}" class="float-end"></span>
+        </th:block>
     </div>
 </div>
 </body>
