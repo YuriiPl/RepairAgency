@@ -46,7 +46,7 @@
                         <tr th:each="service,iterStat : ${page.content}">
                             <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
                             <td th:text="${service.name}">name</td>
-                            <td><button type="button" class="btn-close" aria-label="Close" th:attr="onclick=|location='service/${service.id}/rm'|"></button></td>
+                            <td><button type="button" class="btn-close" aria-label="Close" th:attr="onclick=|location='service/${service.id}/rm?page=${page.getNumber()}&size=${page.getSize()}'|"></button></td>
                         </tr>
                     </tbody>
                 </table>

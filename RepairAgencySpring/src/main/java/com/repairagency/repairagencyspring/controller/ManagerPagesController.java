@@ -20,9 +20,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -45,27 +49,36 @@ public class ManagerPagesController {
                                    })
                                            Pageable pageable,Model model)
     {
-
         Page<Service> page = serviceRepository.findAll(pageable);
-
-//        page.getNumber()
-
         model.addAttribute("page",page);
         model.addAttribute("url","manager");
         return "account/manager/mainpage";
     }
 
     @PostMapping("managerAddService")
-    public ModelAndView managerPageAddService(@Valid ServiceDTO ServiceDTO, BindingResult br, RedirectAttributes redirectAttributes)
+    public String managerPageAddService(@Valid ServiceDTO ServiceDTO, HttpServletRequest request, BindingResult br, RedirectAttributes redirectAttributes)
     {
-        return RepoRedirectService.save(serviceRepository,new Service(ServiceDTO),"manager",br,redirectAttributes);
+        return RepoRedirectService.save(serviceRepository,new Service(ServiceDTO),"manager",br, request,redirectAttributes);
     }
 
     @GetMapping("service/{id}/rm")
-    public ModelAndView managerPageRmService(@PathVariable("id") Long id, ModelAndView modelAndView, RedirectAttributes redirectAttributes)
+    public String managerPageRmService(@PathVariable("id") Long id, HttpServletRequest request, ModelAndView modelAndView, RedirectAttributes redirectAttributes)
     {
-        return RepoRedirectService.removeById(serviceRepository,id,"../../manager",modelAndView,redirectAttributes);
+        try {
+            serviceRepository.deleteById(id);
+        } catch (Exception ex){
+            redirectAttributes.addFlashAttribute("removeDbError",ex.getMessage());
+        }
+        final String collect = request.getParameterMap().entrySet().stream()
+                .filter(e-> e.getKey().equals("page")||e.getKey().equals("size"))
+                .map(e -> e.getKey() + "=" + String.join("", e.getValue()))
+                .collect(Collectors.joining("&"));
+        return "redirect:/account/manager?"+collect;
+
+//        return RepoRedirectService.removeById(serviceRepository,id,"../../manager",modelAndView,redirectAttributes);
     }
+
+
 
 //    @RequestMapping(value = "/secondPage", method = RequestMethod.POST)
 //    public ModelAndView checkUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {

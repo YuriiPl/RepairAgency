@@ -29,8 +29,8 @@ public class VariablesInjectionConfig implements WebMvcConfigurer {
             @Override
             public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
                 if(modelAndView==null)return;
-                DateTimeFormatter frDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(localeResolver.resolveLocale(request));
-                String frFormattedDate = LocalDate.now().format(frDateFormatter);
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(localeResolver.resolveLocale(request));
+                String frFormattedDate = LocalDate.now().format(dateFormatter);
                 modelAndView.addObject("today",frFormattedDate);
             }
         });
