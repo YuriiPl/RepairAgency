@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.NumberFormat;
@@ -26,10 +27,14 @@ public class MainPageUserController {
     final
     UserRepository userRepository;
     UserAccountRepository userAccountRepository;
+    LocaleResolver localeResolver;
 
-    public MainPageUserController(UserRepository userRepository, UserAccountRepository userAccountRepository) {
+    public MainPageUserController(UserRepository userRepository,
+                                  UserAccountRepository userAccountRepository,
+                                  LocaleResolver localeResolver) {
         this.userRepository = userRepository;
         this.userAccountRepository=userAccountRepository;
+        this.localeResolver=localeResolver;
     }
 
     @GetMapping("")
@@ -49,10 +54,12 @@ public class MainPageUserController {
     {
         String param="";
         try {
-            final Number moneyValue = NumberFormat.getNumberInstance(request.getLocale()).parse(money);
+
+            log.warn(request.getLocale().getLanguage());
+            final Number moneyValue = NumberFormat.getNumberInstance(localeResolver.resolveLocale(request)).parse(money);
             if(moneyValue.floatValue()>0) {
-                UserAccount userAccount = userRepository.findByLogin(authentication.getName()).get().getAccount();//.addMoney((long)moneyValue.floatValue()*100);
-                userAccount.addMoney((long) moneyValue.floatValue() * 100);
+                UserAccount userAccount = userRepository.findByLogin(authentication.getName()).get().getAccount();
+                userAccount.addMoney((long) (moneyValue.floatValue() * 100));
                 userAccountRepository.save(userAccount);
             } else{
                 param="?errorValue="+money;

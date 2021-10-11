@@ -18,18 +18,18 @@
 
 <div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
     <div class="container">
-        <div class="d-flex justify-content-end" th:text="#{user.your.money(${userMoney})}"></div>
+        <span class="d-flex justify-content-end" th:text="#{user.your.money(${userMoney})}"></span>
+        <span th:if="${errorMoney ne null}" style="color:red" class="d-flex justify-content-center" th:text="#{user.wrong.money.format(${errorMoney})}"></span>
         <div style="height: auto; margin:auto 20%;text-align:center" class="d-flex justify-content-center">
-            <div th:if="${errorMoney ne null}">
-                <small style="color:red" th:text="#{user.wrong.money.format(${errorMoney})}"></small>
+            <div>
+                <form th:action="@{/account/user/addmoney}" class="row g-1" th:method="post">
+                    <div class="d-flex flex-row bd-highlight mb-3">
+                        <div class="p-2 bd-highlight"><label for="addmoney" class="p-2 bd-highlight" th:text="#{user.add.money}">Add money</label></div>
+                        <div class="p-2 bd-highlight"><input style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" id="addmoney" placeholder="0.00"></div>
+                        <div class="p-2 bd-highlight"><button type="submit" class="btn btn-primary mb-3 p-2 bd-highlight">Confirm</button></div>
+                    </div>
+                </form>
             </div>
-            <form th:action="@{/account/user/addmoney}" class="row g-1" th:method="post">
-                <div class="d-flex flex-row bd-highlight mb-3">
-                    <div class="p-2 bd-highlight"><label for="addmoney" class="p-2 bd-highlight" th:text="#{user.add.money}">Add money</label></div>
-                    <div class="p-2 bd-highlight"><input style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" id="addmoney" placeholder="0.00"></div>
-                    <div class="p-2 bd-highlight"><button type="submit" class="btn btn-primary mb-3 p-2 bd-highlight">Confirm</button></div>
-                </div>
-            </form>
         </div>
     </div>
 </div>
