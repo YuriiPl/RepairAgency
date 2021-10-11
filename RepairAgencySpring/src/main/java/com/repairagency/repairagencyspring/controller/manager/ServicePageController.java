@@ -1,9 +1,9 @@
 package com.repairagency.repairagencyspring.controller.manager;
 
 import com.repairagency.repairagencyspring.dto.ServiceDTO;
-import com.repairagency.repairagencyspring.entity.Service;
+import com.repairagency.repairagencyspring.entity.ServiceName;
 import com.repairagency.repairagencyspring.model.RepoRedirectService;
-import com.repairagency.repairagencyspring.repos.ServiceRepository;
+import com.repairagency.repairagencyspring.repos.ServiceNameRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,10 +29,10 @@ import javax.validation.Valid;
 @RequestMapping(value = "/account/manager/service")
 public class ServicePageController {
 
-    ServiceRepository serviceRepository;
+    ServiceNameRepository serviceNameRepository;
 
-    public ServicePageController(ServiceRepository serviceRepository) {
-        this.serviceRepository = serviceRepository;
+    public ServicePageController(ServiceNameRepository serviceNameRepository) {
+        this.serviceNameRepository = serviceNameRepository;
     }
 
 
@@ -44,7 +44,7 @@ public class ServicePageController {
                                    })
                                            Pageable pageable,Model model)
     {
-        Page<Service> page = serviceRepository.findAll(pageable);
+        Page<ServiceName> page = serviceNameRepository.findAll(pageable);
         model.addAttribute("page",page);
         model.addAttribute("url","service");
         return "/account/manager/service";
@@ -53,13 +53,13 @@ public class ServicePageController {
     @PostMapping("/add")
     public String managerPageAddService(@Valid ServiceDTO ServiceDTO, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes)
     {
-        return RepoRedirectService.save(serviceRepository,new Service(ServiceDTO),"../service",br, request,redirectAttributes);
+        return RepoRedirectService.save(serviceNameRepository,new ServiceName(ServiceDTO),"../service",br, request,redirectAttributes);
     }
 
     @GetMapping("/rm/{id}")
     public String managerPageRmService(@PathVariable("id") Long id, HttpServletRequest request, RedirectAttributes redirectAttributes)
     {
-        return RepoRedirectService.removeById(serviceRepository, id,"../../service",request,redirectAttributes);
+        return RepoRedirectService.removeById(serviceNameRepository, id,"../../service",request,redirectAttributes);
     }
 
 

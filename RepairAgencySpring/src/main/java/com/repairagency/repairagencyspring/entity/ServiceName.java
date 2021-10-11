@@ -4,36 +4,41 @@ import com.repairagency.repairagencyspring.dto.ServiceDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 //@EqualsAndHashCode(of = {"name"})
 @ToString(of = {"name"})
 @NoArgsConstructor
 @Entity
-@Table(name = "Service")
-public class Service {
+@Table
+public class ServiceName {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     private Long id;
 
     //name varchar(128) not null unique
-    @Column(name = "name", unique = true, nullable = false, length = 128)
+    @Column( unique = true, nullable = false, length = 128)
     private String name;
 
-    public Service(String name) {
+
+//    @OneToMany (mappedBy="serviceName", fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+//    private List<Service> services;
+
+    public ServiceName(String name) {
         this.name = name;
     }
 
-    public Service(ServiceDTO serviceDTO) {
+    public ServiceName(ServiceDTO serviceDTO) {
         name = serviceDTO.getServiceName();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Service)) return false;
-        Service service = (Service) o;
+        if (!(o instanceof ServiceName)) return false;
+        ServiceName service = (ServiceName) o;
         return name.equals(service.name);
     }
 
