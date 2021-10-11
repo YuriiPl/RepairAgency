@@ -15,7 +15,7 @@ public class MainPageUserController {
     @GetMapping("")
     public String managerPage()
     {
-        return "user/mainpage";
+        return "account/user/mainpage";
     }
 
 }
