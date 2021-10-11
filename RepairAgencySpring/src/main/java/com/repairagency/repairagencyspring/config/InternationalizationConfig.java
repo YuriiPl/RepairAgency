@@ -7,6 +7,8 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
+import java.util.Locale;
+
 @Configuration
 public class InternationalizationConfig {
 
@@ -22,6 +24,7 @@ public class InternationalizationConfig {
     public LocaleResolver localeResolver(){
         CookieLocaleResolver lr = new CookieLocaleResolver();
         lr.setCookieName("lang");
+        lr.setDefaultLocale(Locale.ENGLISH);
         return lr;
     }
 

@@ -19,8 +19,8 @@ public class PagesErrorController implements ErrorController {
     public String handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
-        if (status != null) {
-
+//        if (status != null) {
+//
 //            int statusCode = Integer.parseInt(status.toString());
 //
 //            if(statusCode == HttpStatus.NOT_FOUND.value()) {
@@ -32,7 +32,7 @@ public class PagesErrorController implements ErrorController {
 //            else if(statusCode == HttpStatus.FORBIDDEN.value()) {
 //                return "errors/403";
 //            }
-        }
+//        }
         return "errors/403";
     }
 
