@@ -23,7 +23,7 @@
                 <span class="page-link" th:text="#{pager.pages}"></span>
             </li>
 <!--            <li class="page-item disabled"><a class="page-link">&DoubleLeftArrow;</a></li>-->
-            <th:block th:each="p: ${#numbers.sequence(1, tpage.getTotalPages())}">
+            <th:block th:each="p: ${#numbers.sequence(1, tpage.getTotalPages())}" th:if="${tpage.getTotalPages()>0}">
                     <li th:if="${(p-1) eq tpage.getNumber()}" class="page-item active">
                         <span class="page-link" th:text="${p}"></span>
                     </li>

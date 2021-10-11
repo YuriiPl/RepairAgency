@@ -6,7 +6,7 @@ import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import java.util.List;
 
 
 @Getter
@@ -26,13 +26,13 @@ public class UserDB {
         this.acceptNewsLatter= userDTO.isAcceptNewsLatter();
         this.userSex= userDTO.getUserSex();
         this.userRole= userDTO.getUserRole()==null?Role.USER: userDTO.getUserRole();
-        this.moneyCents= userDTO.getMoneyCents()==null?0L: userDTO.getMoneyCents();
+        this.account.setAmount(userDTO.getMoneyCents()==null?0L: userDTO.getMoneyCents());
         this.locked=false;
     }
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     @Column(name = "passwd")
     private String password;
@@ -47,7 +47,7 @@ public class UserDB {
     private String login;
 
     @Column(name = "newsaccept")
-    private boolean acceptNewsLatter;
+    private Boolean acceptNewsLatter;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sex")
@@ -57,10 +57,13 @@ public class UserDB {
     @Column(name = "Role")
     private Role userRole;
 
-    @Column(name = "cents")
-    @PositiveOrZero(message = "wrongMoney")
-    Long moneyCents;
+    @OneToOne (optional=false, cascade=CascadeType.ALL)
+    @JoinColumn (name="account_id")
+    UserAccount account = new UserAccount();
 
     private boolean locked;
+
+    @OneToMany (mappedBy="owner", fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+    List<Application> applications;
 
 }

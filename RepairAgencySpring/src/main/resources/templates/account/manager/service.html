@@ -8,10 +8,9 @@
 
 <div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
     <div class="container">
-        <div>Manager</div>
         <div style="height: auto; margin:auto 20%;text-align:center">
 
-            <form th:action="@{/account/managerAddService(page=${page.getNumber()},size=${page.getSize()})}" name="sendForm" method="post">
+            <form th:action="@{/account/manager/service/add(page=${page.getNumber()},size=${page.getSize()})}" name="sendForm" method="post">
                 <div class="form-group">
                     <h1>
                         <label for="add-service" th:text="#{manager.formservice.addService}">Service</label>
@@ -46,7 +45,7 @@
                         <tr th:each="service,iterStat : ${page.content}">
                             <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
                             <td th:text="${service.name}">name</td>
-                            <td><button type="button" class="btn-close" aria-label="Close" th:attr="onclick=|location='service/${service.id}/rm?page=${page.getNumber()}&size=${page.getSize()}'|"></button></td>
+                            <td><button type="button" class="btn-close" aria-label="Close" th:attr="onclick=|location='service/rm/${service.id}?page=${page.getNumber()}&size=${page.getSize()}'|"></button></td>
                         </tr>
                     </tbody>
                 </table>

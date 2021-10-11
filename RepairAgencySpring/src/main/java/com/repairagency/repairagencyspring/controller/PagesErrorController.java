@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 
 @Slf4j
@@ -19,8 +20,6 @@ public class PagesErrorController implements ErrorController {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
         if (status != null) {
-
-            log.warn("{}", status);
 
 //            int statusCode = Integer.parseInt(status.toString());
 //
