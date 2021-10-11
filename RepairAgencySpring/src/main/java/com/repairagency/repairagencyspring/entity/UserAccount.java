@@ -19,8 +19,12 @@ public class UserAccount {
     private Long id;
 
     @Column
-    private Long amount;
+    private long amount;
 
-    @OneToOne (mappedBy="account", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    public void addMoney(long cents){
+        amount+=cents;
+    }
+
+    @OneToOne (mappedBy = "account", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     private UserDB owner;
 }

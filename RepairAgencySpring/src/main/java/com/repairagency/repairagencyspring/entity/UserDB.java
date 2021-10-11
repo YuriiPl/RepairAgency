@@ -57,13 +57,14 @@ public class UserDB {
     @Column(name = "Role")
     private Role userRole;
 
-    @OneToOne (optional=false, cascade=CascadeType.ALL)
+    @OneToOne (fetch=FetchType.EAGER, optional=false, cascade=CascadeType.ALL)
     @JoinColumn (name="account_id")
     UserAccount account = new UserAccount();
 
+    @Column
     private boolean locked;
 
-    @OneToMany (mappedBy="owner", fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+    @OneToMany (mappedBy="owner", fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
     List<Application> applications;
 
 }
