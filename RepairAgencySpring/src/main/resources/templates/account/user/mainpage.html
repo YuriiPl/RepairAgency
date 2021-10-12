@@ -26,11 +26,13 @@
                 <div>
                     <form th:action="@{/account/user/addmoney}" class="row g-1" th:method="post">
                         <div class="d-flex flex-row bd-highlight mb-3">
-                            <div class="p-2 bd-highlight"><label for="addmoney" class="p-2 bd-highlight" th:text="#{user.add.money}">Add money</label></div>
-                            <th:block th:with="clazz=${T(java.text.NumberFormat)},instance=${clazz.getCurrencyInstance(#locale)}">
-                            <div class="p-2 bd-highlight"><input style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" id="addmoney" th:placeholder="${instance.format(0)}"></div>
+                            <div class="bd-highlight"><label for="addmoney" class="p-2 bd-highlight" th:text="#{user.add.money}">Add money</label></div>
+                            <th:block th:with="point=${T(java.text.DecimalFormatSymbols).getInstance(#locale).getDecimalSeparator()}">
+                            <div class="bd-highlight"><input style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" id="addmoney" th:placeholder="'0'+${point}+'00'"></div>
                             </th:block>
-                            <div class="p-2 bd-highlight"><button type="submit" class="btn btn-primary mb-3 p-2 bd-highlight">Confirm</button></div>
+                            <div class="bd-highlight">
+                                <button type="submit" class="btn btn-primary ms-2 p-2 bd-highlight" th:text="#{client.money.confirm}">Confirm</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -45,11 +47,15 @@
                         <label for="add-service" th:text="#{manager.formservice.addService}">Service</label>
                     </h1>
                     <div class="row" style="--bs-gutter-x:0">
-                        <select class="form-control col-sm" id="add-service" name="serviceId">
-                            <option th:each="service : ${services}" th:text="${service.name}" th:value="${service.id}">
-                            </option>
-                        </select>
-                        <button type="submit" class="btn btn-primary col-md-auto" th:text="#{manager.formservice.submit}">Submit</button>
+                        <div class="col-sm">
+<!--                        <select class="form-control col-sm" id="add-service" name="serviceId">-->
+<!--                        <select class="form-select" size="3"  id="add-service" name="serviceId">-->
+                            <select class="form-select form-select-md mr-1" id="add-service" name="serviceId">
+                                <option th:each="service : ${services}" th:text="${service.name}" th:value="${service.id}">
+                                </option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary col-md-auto ms-2" th:text="#{client.formservice.submit}">Submit</button>
                     </div>
                 </div>
             </form>
@@ -58,22 +64,17 @@
         <div class="">
             <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
             <table class="table table-striped table-bordered table-hover">
-                <colgroup>
-                    <col span="1" style="width: 5%;">
-                    <col span="1">
-                    <col span="1" style="width: 10%;">
-                </colgroup>
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th th:text="#{manager.table.service.name}">owner</th>
-                    <th th:text="#{manager.table.service.remove}">REPAIRER</th>
-                    <th th:text="#{manager.table.service.remove}">SERVICENAME</th>
-                    <th th:text="#{manager.table.service.remove}">WORKSTATUS</th>
-                    <th th:text="#{manager.table.service.remove}">PAYSTATUS</th>
-                    <th th:text="#{manager.table.service.remove}">DATECREATE</th>
-                    <th th:text="#{manager.table.service.remove}">DATEFINISH</th>
-                    <th th:text="#{manager.table.service.remove}">PRICE</th>
+                    <th th:text="#{user.table.service.client}">CLIENT</th>
+                    <th th:text="#{user.table.service.repairer}">REPAIRER</th>
+                    <th th:text="#{user.table.service.servicename}">SERVICENAME</th>
+                    <th th:text="#{user.table.service.workstatus}">WORKSTATUS</th>
+                    <th th:text="#{user.table.service.paystatus}">PAYSTATUS</th>
+                    <th th:text="#{user.table.service.datecreate}">DATECREATE</th>
+                    <th th:text="#{user.table.service.datefinish}">DATEFINISH</th>
+                    <th th:text="#{user.table.service.price}">PRICE</th>
                 </tr>
                 </thead>
                 <tbody>
