@@ -1,5 +1,5 @@
 package com.repairagency.repairagencyspring.entity;
 
 public enum PayStatus {
-    WAIT,DONE,CANCELED;
+    WAIT,DONE,CANCELED,FREE;
 }
