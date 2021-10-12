@@ -26,6 +26,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -127,6 +128,11 @@ public class MainPageUserController {
             param="?errorValue="+money;
         }
         return "redirect:/account/user"+param;
+    }
+
+    @PostMapping("/addcomment/{id}")
+    public String addCommentPage(@RequestParam(value = "feedBack") String feedBack, @PathParam(value = "id") Long id){
+        
     }
 
 }

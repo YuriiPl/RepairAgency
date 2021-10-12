@@ -75,6 +75,7 @@
                     <th th:text="#{user.table.service.datecreate}">DATECREATE</th>
                     <th th:text="#{user.table.service.datefinish}">DATEFINISH</th>
                     <th th:text="#{user.table.service.price}">PRICE</th>
+                    <th th:text="#{user.table.service.comment}">COMMENT</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -88,6 +89,9 @@
                     <td th:text="${service.dateCreate?:''}">name</td>
                     <td th:text="${service.dateFinish?:''}">name</td>
                     <td th:text="${service.price?:''}">name</td>
+                    <td style="text-align: center">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow" th:attr="data-bs-url='/account/user/addcomment/'+${service.id}">...</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -95,9 +99,31 @@
         </div>
 
 
-
     </div>
 </div>
+
+<div th:replace="~{layouts/common :: modalwindow('modalWindow')}"></div>
+
+<script th:inline="javascript">
+    let modalWindow = document.getElementById('modalWindow')
+    modalWindow.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        let button = event.relatedTarget
+        // Extract info from data-bs-* attributes
+        let url = button.getAttribute('data-bs-url')
+        // If necessary, you could initiate an AJAX request here
+        // and then do the updating in a callback.
+        //
+        // Update the modal's content.
+        let modalTitle = modalWindow.querySelector('.modal-title')
+        //let textArea = modalWindow.querySelector('.modal-body textarea')
+
+        modalTitle.textContent = /*[[#{user.comment.title}]]*/ 'comment';
+        //modalBodyInput.value = recipient
+        let form = modalWindow.querySelector('#messageForm')
+        form.action=url;
+    })
+</script>
 
 
 <div th:replace="~{layouts/common :: footer}"></div>

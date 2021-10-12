@@ -24,7 +24,10 @@ public class RepairTaskDTO {
         this.dateCreate=repairTask.getDateCreate();
         this.dateFinish=repairTask.getDateFinish();
         this.price = repairTask.getPrice();
+        this.id=repairTask.getId();
     }
+
+    private Long id;
 
     private UserDB owner;
 

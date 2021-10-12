@@ -17,18 +17,26 @@
 </div>
 
 <!-- Modal window -->
-<div th:fragment="modalwindow" class="modal fade" id="modalWindow" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+<div th:fragment="modalwindow(windowName)">
+    <div class="modal fade" th:id="${windowName}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <form action="/auth/login" method="post" id="messageForm">
+                        <div class="mb-2">
+                            <label for="message-text" class="col-form-label"></label>
+                            <textarea class="form-control" name="feedBack" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{modal.form.close}">Close</button>
+                    <button type="submit" class="btn btn-primary" form="messageForm" th:text="#{modal.form.save}">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
