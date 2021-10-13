@@ -84,10 +84,13 @@
                     <td th:text="${service.owner.name}">name</td>
                     <td th:text="${service.repairer?.name}">name</td>
                     <td th:text="${service.serviceName?.name}">name</td>
-                    <td th:text="${service.workStatus}">name</td>
-                    <td th:text="${service.payStatus}">name</td>
-                    <td th:text="${service.dateCreate?:''}">name</td>
-                    <td th:text="${service.dateFinish?:''}">name</td>
+                    <td th:text="#{${service.workStatus.messageId}}">name</td>
+                    <td th:text="#{${service.payStatus.messageId}}">name</td>
+                    <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateCreate})}">name</td>
+
+                    <td th:if="${service.dateFinish}" th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateFinish})}">name</td>
+                    <td th:unless="${service.dateFinish}"></td>
+
                     <td th:text="${service.price?:''}">name</td>
                     <td style="text-align: center">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow" th:attr="data-bs-url='/account/user/addcomment/'+${service.id}">...</button>

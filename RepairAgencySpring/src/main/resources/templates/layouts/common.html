@@ -42,21 +42,22 @@
     </div>
 </div>
 
+<th:block th:fragment="DateTime" th:with="clazz=${T(java.time.format.DateTimeFormatter)},
+          style=${style}?:${T(java.time.format.FormatStyle).FULL},
+          zone=${T(java.time.ZoneId).systemDefault()},
+          dateTimeFormatter=${dateAndTime}?${clazz.ofLocalizedDateTime(style)}:${clazz.ofLocalizedDate(style)},
+          formatter=${dateTimeFormatter.withLocale(#locale).withZone(zone)},
+          value=${value}?:${T(java.time.Instant).now()}">
+    <span th:if="${boundleMessage}" th:text="#{(${boundleMessage})(${formatter.format(value)})}"></span>
+    <span th:unless="${boundleMessage}" th:text="${formatter.format(value)}"></span>
+</th:block>
+
+
 <div th:fragment="footer">
     <div class="fixed-bottom">
         <span class="float-start">© 2021 The Best Repair Agency (TheBRA)</span>
-<!--        <th:block th:with="clazz=${T(java.time.format.DateTimeFormatter)},-->
-<!--          style=${T(java.time.format.FormatStyle).LONG},-->
-<!--          zone=${T(java.time.ZoneId).systemDefault()},-->
-<!--          formatter=${clazz.ofLocalizedDateTime(style).withLocale(#locale).withZone(zone)}">-->
-<!--            <span th:text="#{home.today.is(${formatter.format(T(java.time.Instant).now())})}" class="float-end"/>-->
-<!--        </th:block>-->
-        <th:block th:with="clazz=${T(java.time.format.DateTimeFormatter)},
-          style=${T(java.time.format.FormatStyle).FULL},
-          zone=${T(java.time.ZoneId).systemDefault()},
-          formatter=${clazz.ofLocalizedDate(style).withLocale(#locale).withZone(zone)}">
-            <span th:text="#{home.today.is(${formatter.format(T(java.time.Instant).now())})}" class="float-end"></span>
-        </th:block>
+
+        <span th:insert="~{this :: DateTime(boundleMessage='home.today.is')}"  class="float-end"></span>
     </div>
 </div>
 </body>

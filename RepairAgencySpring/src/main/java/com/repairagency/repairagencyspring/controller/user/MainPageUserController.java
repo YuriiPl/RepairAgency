@@ -127,12 +127,14 @@ public class MainPageUserController {
         } catch (ParseException ignore){
             param="?errorValue="+money;
         }
-        return "redirect:/account/user"+param;
+        return "redirect:../user"+param;
     }
 
+    //VALIDATION!!!!!!!!!!!!!!!!!!!!!!!
+    //Realization!!!!!!!!!!!!!!!!!!!!!!
     @PostMapping("/addcomment/{id}")
     public String addCommentPage(@RequestParam(value = "feedBack") String feedBack, @PathParam(value = "id") Long id){
-        
+        return "redirect:../../user";
     }
 
 }
