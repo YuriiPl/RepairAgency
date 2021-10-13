@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ToString
-@Entity(name = "user") // This tells Hibernate to make a table out of this class
+@Entity(name = "user")
 public class UserDB {
 
     public UserDB(UserDTO userDTO, PasswordEncoder passwordEncoder){
@@ -26,7 +26,9 @@ public class UserDB {
         this.acceptNewsLatter= userDTO.isAcceptNewsLatter();
         this.userSex= userDTO.getUserSex();
         this.userRole= userDTO.getUserRole()==null?Role.USER: userDTO.getUserRole();
-        this.account.setAmount(userDTO.getMoneyCents()==null?0L: userDTO.getMoneyCents());
+        //this.account.setAmount(userDTO.getMoneyCents()==null?0L: userDTO.getMoneyCents());
+        this.account=new UserAccount(userDTO.getMoneyCents()==null?0L: userDTO.getMoneyCents());
+        this.account.setOwner(this);
         this.locked=false;
     }
 
@@ -57,14 +59,16 @@ public class UserDB {
     @Column(name = "Role")
     private Role userRole;
 
-    @OneToOne (fetch=FetchType.LAZY, optional=false, cascade=CascadeType.ALL)
-    @JoinColumn (name="account_id")
-    UserAccount account = new UserAccount();
+//    @OneToOne (fetch=FetchType.LAZY, optional=false, cascade=CascadeType.ALL)
+//    @JoinColumn (name="account_id")
+    @OneToOne(mappedBy = "owner", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    UserAccount account;
 
     @Column
     private boolean locked;
 
-    @OneToMany (mappedBy="owner", fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @OneToMany (mappedBy="owner", fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
     List<RepairTask> repairTasks;
 
 }

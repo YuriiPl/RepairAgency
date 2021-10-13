@@ -17,11 +17,9 @@ public class FeedBack {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private Long whoId;
-
-    private Long aboutId;
-
-    private Long taskInfoId;
+    @OneToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,CascadeType.MERGE, CascadeType.REFRESH})
+    @MapsId
+    RepairTask repairTask;
 
     private String message;
 }

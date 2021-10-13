@@ -21,6 +21,8 @@ public class RepairTask {
         this.dateCreate=repairTaskDTO.getDateCreate();
         this.dateFinish=repairTaskDTO.getDateFinish();
         this.price = repairTaskDTO.getPrice();
+        this.feedBack=new FeedBack();
+        this.feedBack.setRepairTask(this);
     }
 
     @Id
@@ -36,7 +38,7 @@ public class RepairTask {
     @JoinColumn(nullable = true)
     private UserDB repairer;
 
-    @ManyToOne(optional=false, fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+    @ManyToOne(optional=false, fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
     @JoinColumn(nullable = false)
     private ServiceName serviceName;
 
@@ -54,4 +56,8 @@ public class RepairTask {
 
     @Column
     private Long price;
+
+    @OneToOne(mappedBy = "repairTask", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private FeedBack feedBack;
 }
