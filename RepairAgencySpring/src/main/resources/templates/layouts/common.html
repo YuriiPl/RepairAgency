@@ -26,7 +26,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modalBody">
-                    <form action="/auth/login" method="post" id="messageForm">
+                    <form th:action="@{/auth/login}" method="post" id="messageForm">
                         <div class="mb-2">
                             <label for="message-text" class="col-form-label"></label>
                             <textarea class="form-control" name="feedBack" id="message-text"></textarea>
