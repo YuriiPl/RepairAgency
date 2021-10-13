@@ -2,6 +2,7 @@ package com.repairagency.repairagencyspring.entity;
 
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import lombok.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -57,7 +58,11 @@ public class RepairTask {
     @Column
     private Long price;
 
-    @OneToOne(mappedBy = "repairTask", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "repairTask", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private FeedBack feedBack;
+
+    public void setFeedBackMessage(String feedBack) {
+        this.feedBack.setMessage(feedBack);
+    }
 }

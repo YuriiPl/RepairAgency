@@ -2,11 +2,10 @@ package com.repairagency.repairagencyspring.controller.user;
 
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import com.repairagency.repairagencyspring.entity.*;
+import com.repairagency.repairagencyspring.model.DAO.BalanceDAO;
+import com.repairagency.repairagencyspring.model.DAO.BalanceTransactionException;
 import com.repairagency.repairagencyspring.model.RepoRedirectService;
-import com.repairagency.repairagencyspring.repos.RepairTaskRepository;
-import com.repairagency.repairagencyspring.repos.ServiceNameRepository;
-import com.repairagency.repairagencyspring.repos.UserAccountRepository;
-import com.repairagency.repairagencyspring.repos.UserRepository;
+import com.repairagency.repairagencyspring.repos.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,20 +16,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.Locale;
 
 @Slf4j
 @Controller
@@ -38,23 +31,28 @@ import java.util.Locale;
 @RequestMapping(value = "/account/user")
 public class MainPageUserController {
 
-    final
-    LocaleResolver localeResolver;
-    UserRepository userRepository;
-    UserAccountRepository userAccountRepository;
-    RepairTaskRepository repairTaskRepository;
-    ServiceNameRepository serviceNameRepository;
+    final LocaleResolver localeResolver;
+    final UserRepository userRepository;
+    final UserAccountRepository userAccountRepository;
+    final RepairTaskRepository repairTaskRepository;
+    final ServiceNameRepository serviceNameRepository;
+    final FeedBackRepository feedBackRepository;
+
+    private final BalanceDAO balanceDAO;
 
     public MainPageUserController(LocaleResolver localeResolver,
                                   UserRepository userRepository,
                                   UserAccountRepository userAccountRepository,
                                   RepairTaskRepository repairTaskRepository,
-                                  ServiceNameRepository serviceNameRepository) {
+                                  ServiceNameRepository serviceNameRepository,
+                                  FeedBackRepository feedBackRepository, BalanceDAO balanceDAO) {
         this.userRepository = userRepository;
         this.userAccountRepository=userAccountRepository;
         this.localeResolver=localeResolver;
         this.repairTaskRepository=repairTaskRepository;
         this.serviceNameRepository=serviceNameRepository;
+        this.feedBackRepository = feedBackRepository;
+        this.balanceDAO=balanceDAO;
     }
 
     @GetMapping("")
@@ -114,26 +112,26 @@ public class MainPageUserController {
     {
         String param="";
         try {
-
-            log.warn(request.getLocale().getLanguage());
             final Number moneyValue = NumberFormat.getNumberInstance(localeResolver.resolveLocale(request)).parse(money);
             if(moneyValue.floatValue()>0) {
-                UserAccount userAccount = userRepository.findByLogin(authentication.getName()).get().getAccount();
-                userAccount.addMoney((long) (moneyValue.floatValue() * 100));
-                userAccountRepository.save(userAccount);
+                balanceDAO.addAmount(authentication.getName(), (long) (moneyValue.floatValue() * 100));
             } else{
                 param="?errorValue="+money;
             }
-        } catch (ParseException ignore){
+        } catch (ParseException | BalanceTransactionException ignore){
             param="?errorValue="+money;
         }
         return "redirect:../user"+param;
     }
 
-    //VALIDATION!!!!!!!!!!!!!!!!!!!!!!!
-    //Realization!!!!!!!!!!!!!!!!!!!!!!
     @PostMapping("/addcomment/{id}")
-    public String addCommentPage(@RequestParam(value = "feedBack") String feedBack, @PathParam(value = "id") Long id){
+    public String addCommentPage(@RequestParam(value = "feedBack") String feedBack, @PathVariable(value = "id") Long id){
+        if(feedBack.length()>512){
+            feedBack=feedBack.substring(0,512);
+        }
+        RepairTask repairTask = repairTaskRepository.findById(id).orElseThrow(RuntimeException::new);
+        repairTask.setFeedBackMessage(feedBack);
+        repairTaskRepository.save(repairTask);
         return "redirect:../../user";
     }
 
