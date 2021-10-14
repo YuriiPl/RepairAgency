@@ -15,7 +15,8 @@ public class MainPageManagerController {
     @GetMapping("")
     public String managerPage()
     {
-        return "redirect:/account/manager/service";
+
+        return "account/manager/managermainpage";
     }
 
 }
