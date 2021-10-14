@@ -93,7 +93,7 @@
 
                     <td th:text="${service.price?:''}">name</td>
                     <td style="text-align: center">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow" th:attr="id-bs-url=${service.id}">...</button>
+                        <button th:disabled="${service.workStatus.toString() ne 'DONE'}" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow" th:attr="id-bs-url=${service.id}">...</button>
                     </td>
                 </tr>
                 </tbody>
