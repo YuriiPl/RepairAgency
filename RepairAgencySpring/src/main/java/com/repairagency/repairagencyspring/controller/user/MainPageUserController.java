@@ -81,7 +81,7 @@ public class MainPageUserController {
         model.addAttribute("services",services);
         model.addAttribute("userMoney",((float)cents)/100);
 
-        return "account/user/mainpage";
+        return "account/user/usermainpage";
     }
 
 
@@ -131,11 +131,11 @@ public class MainPageUserController {
             feedBack=feedBack.substring(0,512);
         }
         try {
-            RepairTask repairTask = repairTaskRepository.findByOwner_LoginAndIdAndWorkStatus(authentication.getName(), id, WorkStatus.DONE).orElseThrow(CreateCommentException::new);
+            RepairTask repairTask = repairTaskRepository.findByOwner_LoginAndIdAndWorkStatus(authentication.getName(), id, WorkStatus.DONE).orElseThrow(CommentCreateException::new);
             repairTask.setFeedBackMessage(feedBack);
             repairTaskRepository.save(repairTask);
-        }catch (CreateCommentException ignore){
-            
+        }catch (CommentCreateException ignore){
+
         }
         return "redirect:../../user";
     }

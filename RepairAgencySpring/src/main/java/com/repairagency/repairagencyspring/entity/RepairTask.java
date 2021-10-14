@@ -8,8 +8,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor
-@ToString
 @Entity
 public class RepairTask {
 
@@ -21,7 +21,7 @@ public class RepairTask {
         this.payStatus=repairTaskDTO.getPayStatus();
         this.dateCreate=repairTaskDTO.getDateCreate();
         this.dateFinish=repairTaskDTO.getDateFinish();
-        this.price = repairTaskDTO.getPrice();
+        this.price = repairTaskDTO.getLongPrice();
         this.feedBack=new FeedBack();
         this.feedBack.setRepairTask(this);
     }

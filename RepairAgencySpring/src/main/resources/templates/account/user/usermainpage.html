@@ -27,9 +27,9 @@
                     <form th:action="@{/account/user/addmoney}" class="row g-1" th:method="post">
                         <div class="d-flex flex-row bd-highlight mb-3">
                             <div class="bd-highlight"><label for="addmoney" class="p-2 bd-highlight" th:text="#{user.add.money}">Add money</label></div>
-                            <th:block th:with="point=${T(java.text.DecimalFormatSymbols).getInstance(#locale).getDecimalSeparator()}">
-                            <div class="bd-highlight"><input style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" id="addmoney" th:placeholder="'0'+${point}+'00'"></div>
-                            </th:block>
+                            <div class="bd-highlight">
+                                <input th:with="point=${T(java.text.DecimalFormatSymbols).getInstance(#locale).getDecimalSeparator()}" style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" id="addmoney" th:placeholder="'0'+${point}+'00'">
+                            </div>
                             <div class="bd-highlight">
                                 <button type="submit" class="btn btn-primary ms-2 p-2 bd-highlight" th:text="#{client.money.confirm}">Confirm</button>
                             </div>
@@ -44,12 +44,10 @@
             <form th:action="@{/account/user/tasks/add(page=${page.getNumber()},size=${page.getSize()})}" name="sendForm" method="post">
                 <div class="form-group">
                     <h1>
-                        <label for="add-service" th:text="#{manager.formservice.addService}">Service</label>
+                        <label for="add-service" th:text="#{user.formservice.addService}">Service</label>
                     </h1>
                     <div class="row" style="--bs-gutter-x:0">
                         <div class="col-sm">
-<!--                        <select class="form-control col-sm" id="add-service" name="serviceId">-->
-<!--                        <select class="form-select" size="3"  id="add-service" name="serviceId">-->
                             <select class="form-select form-select-md mr-1" id="add-service" name="serviceId">
                                 <option th:each="service : ${services}" th:text="${service.name}" th:value="${service.id}">
                                 </option>
@@ -61,7 +59,7 @@
             </form>
         </div>
 
-        <div class="">
+        <div style="text-align: center">
             <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
             <table class="table table-striped table-bordered table-hover">
                 <thead>
@@ -91,7 +89,7 @@
                     <td th:if="${service.dateFinish}" th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateFinish})}">name</td>
                     <td th:unless="${service.dateFinish}"></td>
 
-                    <td th:text="${service.price?:''}">name</td>
+                    <td th:with="point=${T(java.text.DecimalFormatSymbols).getInstance(#locale).getDecimalSeparator()}" th:text="|${service.price?:'0'+point+'00'}$|">name</td>
                     <td style="text-align: center">
                         <button th:disabled="${service.workStatus.toString() ne 'DONE'}" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow" th:attr="id-bs-url=${service.id}">...</button>
                     </td>
