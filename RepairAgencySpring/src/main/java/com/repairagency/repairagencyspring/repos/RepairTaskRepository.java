@@ -1,6 +1,7 @@
 package com.repairagency.repairagencyspring.repos;
 
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
+import com.repairagency.repairagencyspring.entity.PayStatus;
 import com.repairagency.repairagencyspring.entity.RepairTask;
 import com.repairagency.repairagencyspring.entity.UserDB;
 import com.repairagency.repairagencyspring.entity.WorkStatus;
@@ -18,4 +19,7 @@ import java.util.Optional;
 public interface RepairTaskRepository extends JpaRepository<RepairTask, Long> {
     Page<RepairTaskDTO> findByOwner(UserDB userDB, Pageable pageable);
     Optional<RepairTask> findByOwner_LoginAndIdAndWorkStatus(String name, Long id, WorkStatus done);
+
+    Page<RepairTaskDTO> findAllByPayStatus(PayStatus payStatus, Pageable pageable);
+
 }

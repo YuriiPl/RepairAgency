@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:lang="${#locale.language}">
+<head th:replace="~{layouts/common :: head}" >
+    <title>None</title>
+</head>
+<body>
+<div th:replace="~{layouts/common :: header}"></div>
+
+<script th:inline="javascript">
+    function sendPrice(button) {
+        let money=button.parentElement.querySelector("input[name='money']").value;
+        let id=button.getAttribute('taskid');
+        let xhttp = new XMLHttpRequest();
+        xhttp.responseType="json";
+        xhttp.onreadystatechange = function(){
+            if(xhttp.readyState===4 && xhttp.status===200){
+                let answer = xhttp.response;
+                if(answer.status==="ok"){
+                    document.getElementById("nopay"+answer.id).setAttribute("hidden","true");
+                    document.getElementById("askpay"+answer.id).removeAttribute("hidden");
+                    document.getElementById("money"+answer.id).innerText=answer.money;
+                }
+            }
+        }
+        xhttp.open("POST", "/account/manager/tasks/setprice/"+id+'?money='+money+'&'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
+        xhttp.send();
+    }
+</script>
+
+<div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
+    <div class="container">
+        <h1>
+            <span class="d-flex justify-content-center" th:text="#{manager.newprice.setprice}">Service</span>
+        </h1>
+        <div style="text-align: center">
+            <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th th:text="#{user.table.service.client}">CLIENT</th>
+                    <th th:text="#{user.table.service.servicename}">SERVICENAME</th>
+                    <th th:text="#{user.table.service.paystatus}">PAYSTATUS</th>
+                    <th th:text="#{user.table.service.datecreate}">DATECREATE</th>
+                    <th th:text="#{user.table.service.price}">PRICE</th>
+                    <th th:text="#{user.table.service.setprice}">SETPRICE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:with="point=${T(java.text.DecimalFormatSymbols).getInstance(#locale).getDecimalSeparator()}">
+                    <tr th:each="service,iterStat : ${page.content}">
+                        <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
+                        <td th:text="${service.owner.name}">name</td>
+                        <td th:text="${service.serviceName?.name}">name</td>
+                        <td th:text="#{${service.payStatus.messageId}}" th:id="|nopay${service.id}|">name</td>
+                        <td th:text="#{paystatus.pay.wait}" th:id="|askpay${service.id}|" hidden="true">name</td>
+                        <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateCreate})}">name</td>
+                        <td th:text="|${service.price?:'0'+point+'00'}$|" th:id="|money${service.id}|">name</td>
+                        <td>
+                            <div class="d-flex flex-row bd-highlight justify-content-center">
+                                <input style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" th:placeholder="'0'+${point}+'00'">
+                                <button type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="sendPrice(this)">Ok</button>
+                            </div>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+            <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+        </div>
+    </div>
+</div>
+
+
+    <div th:replace="~{layouts/common :: footer}"></div>
+</body>
+</html>
