@@ -25,3 +25,17 @@ function fetchPostJson(form, okFunc, errorFunc){
     return false;
 }
 
+function createAJAX(button,func,respType){
+    let xhttp = new XMLHttpRequest();
+    xhttp.responseType=respType;
+    xhttp.onreadystatechange = function(){
+        if(xhttp.readyState===4 && xhttp.status===200){
+            let answer = xhttp.response;
+            if(answer.status==="ok"){
+                let answer = xhttp.response;
+                func(answer);
+            }
+        }
+    }
+    return xhttp;
+}

@@ -8,6 +8,7 @@ import com.repairagency.repairagencyspring.repos.RepairTaskRepository;
 import com.repairagency.repairagencyspring.repos.ServiceNameRepository;
 import com.repairagency.repairagencyspring.repos.UserAccountRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,18 +36,20 @@ public class NewTasksPageController {
     final RepairTaskRepository repairTaskRepository;
     final ServiceNameRepository serviceNameRepository;
     final FeedBackRepository feedBackRepository;
+    final ResourceBundleMessageSource resourceBundleMessageSource;
 
 
     public NewTasksPageController(LocaleResolver localeResolver,
                                   UserAccountRepository userAccountRepository,
                                   RepairTaskRepository repairTaskRepository,
                                   ServiceNameRepository serviceNameRepository,
-                                  FeedBackRepository feedBackRepository) {
+                                  FeedBackRepository feedBackRepository, ResourceBundleMessageSource resourceBundleMessageSource) {
         this.userAccountRepository=userAccountRepository;
         this.localeResolver=localeResolver;
         this.repairTaskRepository=repairTaskRepository;
         this.serviceNameRepository=serviceNameRepository;
         this.feedBackRepository = feedBackRepository;
+        this.resourceBundleMessageSource = resourceBundleMessageSource;
     }
 
     @GetMapping("/new")
@@ -68,7 +71,7 @@ public class NewTasksPageController {
 
     @PostMapping("/setprice/{id}")
     @ResponseBody
-    public HashMap<String, Object> addCommentPage(@RequestParam(value = "money") String money, @PathVariable(value = "id") Long taskId, HttpServletRequest request){
+    public HashMap<String, Object> setPrice(@RequestParam(value = "money") String money, @PathVariable(value = "id") Long taskId, HttpServletRequest request){
         HashMap<String, Object> result = new HashMap<>();
         result.put("status","ok");
         result.put("id",taskId);
@@ -78,14 +81,33 @@ public class NewTasksPageController {
                 RepairTask repairTask = repairTaskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
                 repairTask.setPrice((long) (moneyValue.floatValue()*100));
                 repairTask.setPayStatus(PayStatus.WAIT);
-                log.warn(String.valueOf(moneyValue.floatValue()));
                 repairTaskRepository.save(repairTask);
-                result.put("money",repairTask.getPrice().floatValue()/100+"$");
+                result.put("money", resourceBundleMessageSource.getMessage("number.converter", new Float[]{repairTask.getPrice().floatValue() / 100 },localeResolver.resolveLocale(request)));
+                result.put("message",resourceBundleMessageSource.getMessage(PayStatus.WAIT.getMessageId(),null,localeResolver.resolveLocale(request)));
             } else{
                 result.put("status","error");
                 result.put("type","negative");
             }
-        } catch (ParseException ignore){
+        } catch (ParseException | TaskNotFoundException ignore){
+            result.put("status","error");
+            result.put("type","wrong");
+        }
+        return result;
+    }
+
+    @PostMapping("/cancel/{id}")
+    @ResponseBody
+    public HashMap<String, Object> setCanceled(@PathVariable(value = "id") Long taskId, HttpServletRequest request){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("status","ok");
+        result.put("id",taskId);
+        try {
+                RepairTask repairTask = repairTaskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
+                repairTask.setPayStatus(PayStatus.CANCELED);
+                repairTask.setPrice(0L);
+                repairTaskRepository.save(repairTask);
+                result.put("message",resourceBundleMessageSource.getMessage(PayStatus.CANCELED.getMessageId(),null,localeResolver.resolveLocale(request)));
+        } catch (TaskNotFoundException ignore){
             result.put("status","error");
             result.put("type","wrong");
         }

@@ -23,7 +23,7 @@ public class RepairTaskDTO {
         this.payStatus=repairTask.getPayStatus();
         this.dateCreate=repairTask.getDateCreate();
         this.dateFinish=repairTask.getDateFinish();
-        this.price = repairTask.getPrice()==null?null:repairTask.getPrice().doubleValue()/100;
+        this.price = repairTask.getPrice()==null?null:repairTask.getPrice().floatValue()/100;
         this.id=repairTask.getId();
     }
 
@@ -43,7 +43,7 @@ public class RepairTaskDTO {
 
     private LocalDateTime dateFinish;
 
-    private Double price;
+    private Float price;
 
     public Long getLongPrice() {
         if(price==null)return null;

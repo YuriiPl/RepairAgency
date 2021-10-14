@@ -89,7 +89,7 @@
                     <td th:if="${service.dateFinish}" th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateFinish})}">name</td>
                     <td th:unless="${service.dateFinish}"></td>
 
-                    <td th:with="point=${T(java.text.DecimalFormatSymbols).getInstance(#locale).getDecimalSeparator()}" th:text="|${service.price?:'0'+point+'00'}$|">name</td>
+                    <td th:text="|#{number.converter(${service.price?:0.00})}$|">name</td>
                     <td style="text-align: center">
                         <button th:disabled="${service.workStatus.toString() ne 'DONE'}" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow" th:attr="id-bs-url=${service.id}">...</button>
                     </td>
