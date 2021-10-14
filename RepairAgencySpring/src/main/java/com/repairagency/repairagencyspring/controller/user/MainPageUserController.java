@@ -6,6 +6,7 @@ import com.repairagency.repairagencyspring.model.DAO.BalanceDAO;
 import com.repairagency.repairagencyspring.model.DAO.BalanceTransactionException;
 import com.repairagency.repairagencyspring.model.RepoRedirectService;
 import com.repairagency.repairagencyspring.repos.*;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 
-@Slf4j
+@Log4j2
 @Controller
 @PreAuthorize("hasAnyAuthority('perm:user','perm:worker','perm:manager')")
 @RequestMapping(value = "/account/user")
@@ -70,7 +71,7 @@ public class MainPageUserController {
         if(value != null){
             model.addAttribute("errorMoney",value);
         }
-        UserDB userDB = userRepository.findByLogin(authentication.getName()).get(); //User has already authenticated, so anyway he is present in db
+        UserDB userDB = userRepository.findByLogin(authentication.getName()).get(); //User has already authenticated, so he is present in db
         Page<RepairTaskDTO> page = repairTaskRepository.findByOwner(userDB,pageable);
         final Iterable<ServiceName> services = serviceNameRepository.findAll(Sort.by(Sort.Order.asc("name")));
 
@@ -126,6 +127,7 @@ public class MainPageUserController {
 
     @PostMapping("/addcomment/{id}")
     public String addCommentPage(@RequestParam(value = "feedBack") String feedBack, @PathVariable(value = "id") Long id){
+        log.warn("test");
         if(feedBack.length()>512){
             feedBack=feedBack.substring(0,512);
         }
@@ -133,6 +135,13 @@ public class MainPageUserController {
         repairTask.setFeedBackMessage(feedBack);
         repairTaskRepository.save(repairTask);
         return "redirect:../../user";
+    }
+
+    @PostMapping("/getcomment/{id}")
+    @ResponseBody
+    public String getCommentPage( @PathVariable(value = "id") Long id){
+        return repairTaskRepository.findById(id).orElseThrow(RuntimeException::new)
+                .getFeedBack().getMessage();
     }
 
 }

@@ -17,7 +17,7 @@ public class FeedBack {
 //    @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.DETACH,CascadeType.MERGE, CascadeType.REFRESH})
     @MapsId
     RepairTask repairTask;
 

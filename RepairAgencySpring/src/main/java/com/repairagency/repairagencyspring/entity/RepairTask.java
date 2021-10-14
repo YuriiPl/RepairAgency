@@ -39,7 +39,7 @@ public class RepairTask {
     @JoinColumn(nullable = true)
     private UserDB repairer;
 
-    @ManyToOne(optional=false, fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @ManyToOne(optional=false, fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
     @JoinColumn(nullable = false)
     private ServiceName serviceName;
 
