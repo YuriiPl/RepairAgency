@@ -7,7 +7,6 @@ import com.repairagency.repairagencyspring.model.DAO.BalanceTransactionException
 import com.repairagency.repairagencyspring.model.RepoRedirectService;
 import com.repairagency.repairagencyspring.repos.*;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -126,14 +125,18 @@ public class MainPageUserController {
     }
 
     @PostMapping("/addcomment/{id}")
-    public String addCommentPage(@RequestParam(value = "feedBack") String feedBack, @PathVariable(value = "id") Long id){
+    public String addCommentPage(@RequestParam(value = "feedBack") String feedBack, @PathVariable(value = "id") Long id, Authentication authentication){
         log.warn("test");
         if(feedBack.length()>512){
             feedBack=feedBack.substring(0,512);
         }
-        RepairTask repairTask = repairTaskRepository.findById(id).orElseThrow(RuntimeException::new);
-        repairTask.setFeedBackMessage(feedBack);
-        repairTaskRepository.save(repairTask);
+        try {
+            RepairTask repairTask = repairTaskRepository.findByOwner_LoginAndIdAndWorkStatus(authentication.getName(), id, WorkStatus.DONE).orElseThrow(CreateCommentException::new);
+            repairTask.setFeedBackMessage(feedBack);
+            repairTaskRepository.save(repairTask);
+        }catch (CreateCommentException ignore){
+            
+        }
         return "redirect:../../user";
     }
 
