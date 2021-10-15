@@ -22,7 +22,7 @@ public class UserAccount {
         this.amount=amount;
     }
 
-    @Column
+    @Column(nullable = false)
     private long amount;
 
     @OneToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,CascadeType.MERGE, CascadeType.REFRESH},fetch = FetchType.LAZY)

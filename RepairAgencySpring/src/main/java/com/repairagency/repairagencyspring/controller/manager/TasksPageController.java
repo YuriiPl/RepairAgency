@@ -29,7 +29,7 @@ import java.util.HashMap;
 @Controller
 @PreAuthorize("hasAuthority('perm:manager')")
 @RequestMapping(value = "/account/manager/tasks")
-public class NewTasksPageController {
+public class TasksPageController {
 
     final LocaleResolver localeResolver;
     final UserAccountRepository userAccountRepository;
@@ -39,11 +39,11 @@ public class NewTasksPageController {
     final ResourceBundleMessageSource resourceBundleMessageSource;
 
 
-    public NewTasksPageController(LocaleResolver localeResolver,
-                                  UserAccountRepository userAccountRepository,
-                                  RepairTaskRepository repairTaskRepository,
-                                  ServiceNameRepository serviceNameRepository,
-                                  FeedBackRepository feedBackRepository, ResourceBundleMessageSource resourceBundleMessageSource) {
+    public TasksPageController(LocaleResolver localeResolver,
+                               UserAccountRepository userAccountRepository,
+                               RepairTaskRepository repairTaskRepository,
+                               ServiceNameRepository serviceNameRepository,
+                               FeedBackRepository feedBackRepository, ResourceBundleMessageSource resourceBundleMessageSource) {
         this.userAccountRepository=userAccountRepository;
         this.localeResolver=localeResolver;
         this.repairTaskRepository=repairTaskRepository;
@@ -57,13 +57,14 @@ public class NewTasksPageController {
             Model model,
             @PageableDefault(page = 0, size = 10)
             @SortDefault.SortDefaults({
-                    @SortDefault(sort = "serviceName.name", direction = Sort.Direction.ASC),
+//                    @SortDefault(sort = "serviceName.name", direction = Sort.Direction.ASC),
+                    @SortDefault(sort = "dateCreate", direction = Sort.Direction.DESC),
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)
             })
                     Pageable pageable
     )
     {
-        Page<RepairTaskDTO> page = repairTaskRepository.findAllByPayStatus(PayStatus.FREE,pageable);
+        Page<RepairTaskDTO> page = repairTaskRepository.findAllByIdIsNotNull(pageable);
         model.addAttribute("page",page);
         model.addAttribute("url","new");
         return "account/manager/managernewtasks";
@@ -102,11 +103,29 @@ public class NewTasksPageController {
         result.put("status","ok");
         result.put("id",taskId);
         try {
-                RepairTask repairTask = repairTaskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
-                repairTask.setPayStatus(PayStatus.CANCELED);
-                repairTask.setPrice(0L);
-                repairTaskRepository.save(repairTask);
-                result.put("message",resourceBundleMessageSource.getMessage(PayStatus.CANCELED.getMessageId(),null,localeResolver.resolveLocale(request)));
+            RepairTask repairTask = repairTaskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
+            repairTask.setPayStatus(PayStatus.CANCELED);
+//            repairTask.setPrice(0L);
+            repairTaskRepository.save(repairTask);
+            result.put("message",resourceBundleMessageSource.getMessage(PayStatus.CANCELED.getMessageId(),null,localeResolver.resolveLocale(request)));
+        } catch (TaskNotFoundException ignore){
+            result.put("status","error");
+            result.put("type","wrong");
+        }
+        return result;
+    }
+
+    @PostMapping("/acceptpay/{id}")
+    @ResponseBody
+    public HashMap<String, Object> setAcceptPay(@PathVariable(value = "id") Long taskId, HttpServletRequest request){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("status","ok");
+        result.put("id",taskId);
+        try {
+            RepairTask repairTask = repairTaskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
+            repairTask.setPayStatus(PayStatus.DONE);
+            repairTaskRepository.save(repairTask);
+            result.put("message",resourceBundleMessageSource.getMessage(PayStatus.DONE.getMessageId(),null,localeResolver.resolveLocale(request)));
         } catch (TaskNotFoundException ignore){
             result.put("status","error");
             result.put("type","wrong");

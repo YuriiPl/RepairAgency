@@ -1,10 +1,7 @@
 package com.repairagency.repairagencyspring.repos;
 
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
-import com.repairagency.repairagencyspring.entity.PayStatus;
-import com.repairagency.repairagencyspring.entity.RepairTask;
-import com.repairagency.repairagencyspring.entity.UserDB;
-import com.repairagency.repairagencyspring.entity.WorkStatus;
+import com.repairagency.repairagencyspring.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +21,5 @@ public interface RepairTaskRepository extends JpaRepository<RepairTask, Long> {
 
     Optional<RepairTask> findByOwner_LoginAndIdAndPayStatus(String login, Long id, PayStatus status);
 
+    Page<RepairTaskDTO> findAllByIdIsNotNull(Pageable pageable);
 }
