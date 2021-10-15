@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:lang="${#locale.language}">
+<head th:replace="~{layouts/common :: head}" >
+    <title>None</title>
+</head>
+<body>
+<div th:replace="~{layouts/common :: header}"></div>
+
+<script th:inline="javascript">
+
+    function changeStatus(button) {
+        let id=button.getAttribute('taskid');
+        let stat=document.getElementById("nextstat"+id);
+        let xhttp=createAJAX(function (response) {
+            if(response.status==="ok"){
+                location=location;
+            }
+        },"json");
+        xhttp.open("POST", "/account/repairer/setstatus/"+id+"/"+stat.innerText+'?'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
+        xhttp.send();
+    }
+
+</script>
+
+
+
+<div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
+    <div class="container">
+
+        <div style="text-align: center">
+            <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th th:text="#{user.table.service.client}">CLIENT</th>
+                    <th th:text="#{user.table.service.repairer}">REPAIRER</th>
+                    <th th:text="#{user.table.service.servicename}">SERVICENAME</th>
+                    <th th:text="#{user.table.service.workstatus}">WORKSTATUS</th>
+                    <th th:text="#{user.table.service.paystatus}">PAYSTATUS</th>
+                    <th th:text="#{user.table.service.datecreate}">DATECREATE</th>
+                    <th th:text="#{user.table.service.datefinish}">DATEFINISH</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="service,iterStat : ${page.content}">
+                    <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
+                    <td th:text="${service.owner.name}">name</td>
+                    <td th:text="${service.repairer?.name}">name</td>
+                    <td th:text="${service.serviceName?.name}">name</td>
+                    <td>
+                        <div class="d-flex flex-row bd-highlight justify-content-center">
+                            <span class="p-2" th:text="#{${service.workStatus.messageId}}" th:id="|status${service.id}|">Wait for accept</span>
+                            <div th:if="${service.workStatus.toString() ne 'DONE'}">
+                                <span th:if="${service.workStatus.toString() eq 'FREE'}" hidden th:id="|nextstat${service.id}|">PROCESS</span>
+                                <span th:if="${service.workStatus.toString() eq 'PROCESS'}" hidden th:id="|nextstat${service.id}|">DONE</span>
+                                <button type="button" class="btn btn-primary" onclick="changeStatus(this)" th:attr="taskId=${service.id}" >Ok</button>
+                            </div>
+                        </div>
+                    </td>
+                    <td th:text="#{${service.payStatus.messageId}}" th:id="|pay${service.id}|">name</td>
+                    <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateCreate})}">name</td>
+                    <td th:if="${service.dateFinish}" th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateFinish})}">name</td>
+                    <td th:unless="${service.dateFinish}"></td>
+
+                </tr>
+                </tbody>
+            </table>
+            <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+
+<div th:replace="~{layouts/common :: footer}"></div>
+
+</body>
+</html>

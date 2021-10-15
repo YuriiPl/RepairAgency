@@ -16,8 +16,10 @@ import java.util.Optional;
 public interface RepairTaskRepository extends JpaRepository<RepairTask, Long> {
     Page<RepairTaskDTO> findByOwner(UserDB userDB, Pageable pageable);
     Optional<RepairTask> findByOwner_LoginAndIdAndWorkStatus(String name, Long id, WorkStatus done);
-    Page<RepairTaskDTO> findAllByPayStatus(PayStatus payStatus, Pageable pageable);
+//    Page<RepairTaskDTO> findAllByPayStatus(PayStatus payStatus, Pageable pageable);
     Optional<RepairTask> findByOwner_LoginAndIdAndPayStatus(String login, Long id, PayStatus status);
     Page<RepairTaskDTO> findAllByIdIsNotNull(Pageable pageable);
     Optional<RepairTask> findByIdAndWorkStatus(Long id,WorkStatus workStatus);
+
+    Page<RepairTaskDTO> findAllByRepairer_Login(String login, Pageable pageable);
 }
