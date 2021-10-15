@@ -159,7 +159,7 @@ public class MainPageUserController {
         result.put("status","ok");
         result.put("id",taskId);
         try {
-            RepairTask repairTask = repairTaskRepository.findByOwner_LoginAndAndIdAndPayStatus(authentication.getName(), taskId, PayStatus.WAIT).orElseThrow(TaskNotFoundException::new);
+            RepairTask repairTask = repairTaskRepository.findByOwner_LoginAndIdAndPayStatus(authentication.getName(), taskId, PayStatus.WAIT).orElseThrow(TaskNotFoundException::new);
             UserAccount account = repairTask.getOwner().getAccount();
             Long price = repairTask.getPrice();
             Long amount=account.getAmount();
