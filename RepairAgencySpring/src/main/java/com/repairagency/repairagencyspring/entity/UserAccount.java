@@ -25,10 +25,6 @@ public class UserAccount {
     @Column
     private long amount;
 
-    public void addMoney(long cents){
-        amount+=cents;
-    }
-
     @OneToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,CascadeType.MERGE, CascadeType.REFRESH},fetch = FetchType.LAZY)
     @MapsId
     private UserDB owner;

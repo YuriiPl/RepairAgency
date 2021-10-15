@@ -12,9 +12,11 @@
         let money=editor.value;
         editor.value="";
         let id=button.getAttribute('taskid');
-        let xhttp=createAJAX(button,function (answer) {
-            document.getElementById("pay"+answer.id).innerText=answer.message;
-            document.getElementById("money"+answer.id).innerText=answer.money+"$";
+        let xhttp=createAJAX(function (response) {
+            if(response.status==="ok") {
+                document.getElementById("pay" + response.id).innerText = response.message;
+                document.getElementById("money" + response.id).innerText = response.money + "$";
+            }
         },"json");
         xhttp.open("POST", "/account/manager/tasks/setprice/"+id+'?money='+money+'&'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
         xhttp.send();
@@ -22,8 +24,10 @@
 
     function cancelTask(button) {
         let id=button.getAttribute('taskid');
-        let xhttp=createAJAX(button,function (answer) {
-            document.getElementById("pay"+answer.id).innerText=answer.message;
+        let xhttp=createAJAX(function (response) {
+            if(response.status==="ok"){
+                document.getElementById("pay"+response.id).innerText=response.message;
+            }
         },"json");
         xhttp.open("POST", "/account/manager/tasks/cancel/"+id+'?'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
         xhttp.send();
