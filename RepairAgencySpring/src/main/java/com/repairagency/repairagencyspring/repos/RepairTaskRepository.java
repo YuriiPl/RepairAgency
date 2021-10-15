@@ -22,4 +22,6 @@ public interface RepairTaskRepository extends JpaRepository<RepairTask, Long> {
     Optional<RepairTask> findByIdAndWorkStatus(Long id,WorkStatus workStatus);
 
     Page<RepairTaskDTO> findAllByRepairer_Login(String login, Pageable pageable);
+
+    Optional<RepairTask> findByIdAndWorkStatusNot(Long id, WorkStatus workStatus);
 }

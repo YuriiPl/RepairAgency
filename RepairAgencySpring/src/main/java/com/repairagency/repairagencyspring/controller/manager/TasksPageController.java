@@ -109,7 +109,7 @@ public class TasksPageController {
         result.put("status","ok");
         result.put("id",taskId);
         try {
-            RepairTask repairTask = repairTaskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
+            RepairTask repairTask = repairTaskRepository.findByIdAndWorkStatusNot(taskId,WorkStatus.DONE).orElseThrow(TaskNotFoundException::new);
             if(repairTask.getPayStatus() != PayStatus.DONE){
                 repairTask.setPrice(0L);
             }
