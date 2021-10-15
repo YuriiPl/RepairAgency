@@ -1,5 +1,6 @@
 package com.repairagency.repairagencyspring.controller.user;
 
+import com.repairagency.repairagencyspring.controller.manager.TaskNotFoundException;
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import com.repairagency.repairagencyspring.entity.*;
 import com.repairagency.repairagencyspring.model.DAO.BalanceDAO;
@@ -7,6 +8,7 @@ import com.repairagency.repairagencyspring.model.DAO.BalanceTransactionException
 import com.repairagency.repairagencyspring.model.RepoRedirectService;
 import com.repairagency.repairagencyspring.repos.*;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 @Log4j2
 @Controller
@@ -37,6 +40,7 @@ public class MainPageUserController {
     final RepairTaskRepository repairTaskRepository;
     final ServiceNameRepository serviceNameRepository;
     final FeedBackRepository feedBackRepository;
+    final ResourceBundleMessageSource resourceBundleMessageSource;
 
     private final BalanceDAO balanceDAO;
 
@@ -45,13 +49,14 @@ public class MainPageUserController {
                                   UserAccountRepository userAccountRepository,
                                   RepairTaskRepository repairTaskRepository,
                                   ServiceNameRepository serviceNameRepository,
-                                  FeedBackRepository feedBackRepository, BalanceDAO balanceDAO) {
+                                  FeedBackRepository feedBackRepository, ResourceBundleMessageSource resourceBundleMessageSource, BalanceDAO balanceDAO) {
         this.userRepository = userRepository;
         this.userAccountRepository=userAccountRepository;
         this.localeResolver=localeResolver;
         this.repairTaskRepository=repairTaskRepository;
         this.serviceNameRepository=serviceNameRepository;
         this.feedBackRepository = feedBackRepository;
+        this.resourceBundleMessageSource = resourceBundleMessageSource;
         this.balanceDAO=balanceDAO;
     }
 
@@ -145,6 +150,33 @@ public class MainPageUserController {
     public String getCommentPage( @PathVariable(value = "id") Long id){
         return repairTaskRepository.findById(id).orElseThrow(RuntimeException::new)
                 .getFeedBack().getMessage();
+    }
+
+    @PostMapping("/trytopay/{id}")
+    @ResponseBody
+    public HashMap<String, Object> tryToPay(@PathVariable(value = "id") Long taskId, Authentication authentication,HttpServletRequest request){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("status","ok");
+        result.put("id",taskId);
+        try {
+            RepairTask repairTask = repairTaskRepository.findByOwner_LoginAndAndIdAndPayStatus(authentication.getName(), taskId, PayStatus.WAIT).orElseThrow(TaskNotFoundException::new);
+            UserAccount account = repairTask.getOwner().getAccount();
+            Long price = repairTask.getPrice();
+            Long amount=account.getAmount();
+            if(price>amount){
+                result.put("status","error");
+                result.put("message",resourceBundleMessageSource.getMessage("user.money.not.enough",null,localeResolver.resolveLocale(request)));
+            } else {
+                account.setAmount(account.getAmount()-price);
+                repairTask.setPayStatus(PayStatus.PAID);
+                repairTaskRepository.save(repairTask);
+                result.put("message",resourceBundleMessageSource.getMessage(PayStatus.PAID.getMessageId(),null,localeResolver.resolveLocale(request)));
+            }
+        } catch (TaskNotFoundException ignore){
+            result.put("status","error");
+            result.put("message","");
+        }
+        return result;
     }
 
 }

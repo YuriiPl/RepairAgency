@@ -1,8 +1,9 @@
 package com.repairagency.repairagencyspring.entity;
 
 public enum PayStatus {
-    WAIT("paystatus.pay.wait"),
     DONE("paystatus.pay.done"),
+    PAID("paystatus.pay.paid"),
+    WAIT("paystatus.pay.wait"),
     CANCELED("paystatus.pay.canceled"),
     FREE("paystatus.pay.free");
 
