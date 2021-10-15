@@ -23,8 +23,8 @@ public class ServiceName {
     private String name;
 
 
-//    @OneToMany (mappedBy="serviceName", fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
-//    private List<Service> services;
+    @OneToMany (mappedBy="serviceName", fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+    private List<RepairTask> services;
 
     public ServiceName(String name) {
         this.name = name;

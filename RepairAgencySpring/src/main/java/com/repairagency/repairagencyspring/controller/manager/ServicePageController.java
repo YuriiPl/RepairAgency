@@ -51,9 +51,9 @@ public class ServicePageController {
     }
 
     @PostMapping("/add")
-    public String managerPageAddService(@Valid ServiceDTO ServiceDTO, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes)
+    public String managerPageAddService(@Valid ServiceDTO serviceDTO, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes)
     {
-        return RepoRedirectService.save(serviceNameRepository,new ServiceName(ServiceDTO),"../service",br, request,redirectAttributes);
+        return RepoRedirectService.save(serviceNameRepository,new ServiceName(serviceDTO),"../service",br, request,redirectAttributes);
     }
 
     @GetMapping("/rm/{id}")

@@ -17,38 +17,47 @@
 </div>
 
 <!-- Modal window -->
-<div th:fragment="modalwindow" class="modal fade" id="modalWindow" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+<div th:fragment="modalwindow(windowName)">
+    <div class="modal fade" th:id="${windowName}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <form th:action="@{/auth/login}" method="post" id="messageForm">
+                        <div class="mb-2">
+                            <label for="message-text" class="col-form-label"></label>
+                            <textarea class="form-control" name="feedBack" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{modal.form.close}">Close</button>
+                    <button type="submit" class="btn btn-primary" form="messageForm" th:text="#{modal.form.save}">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<th:block th:fragment="DateTime" th:with="clazz=${T(java.time.format.DateTimeFormatter)},
+          style=${style}?:${T(java.time.format.FormatStyle).FULL},
+          zone=${T(java.time.ZoneId).systemDefault()},
+          dateTimeFormatter=${dateAndTime}?${clazz.ofLocalizedDateTime(style)}:${clazz.ofLocalizedDate(style)},
+          formatter=${dateTimeFormatter.withLocale(#locale).withZone(zone)},
+          value=${value}?:${T(java.time.Instant).now()}">
+    <span th:if="${boundleMessage}" th:text="#{(${boundleMessage})(${formatter.format(value)})}"></span>
+    <span th:unless="${boundleMessage}" th:text="${formatter.format(value)}"></span>
+</th:block>
+
+
 <div th:fragment="footer">
     <div class="fixed-bottom">
         <span class="float-start">© 2021 The Best Repair Agency (TheBRA)</span>
-<!--        <th:block th:with="clazz=${T(java.time.format.DateTimeFormatter)},-->
-<!--          style=${T(java.time.format.FormatStyle).LONG},-->
-<!--          zone=${T(java.time.ZoneId).systemDefault()},-->
-<!--          formatter=${clazz.ofLocalizedDateTime(style).withLocale(#locale).withZone(zone)}">-->
-<!--            <span th:text="#{home.today.is(${formatter.format(T(java.time.Instant).now())})}" class="float-end"/>-->
-<!--        </th:block>-->
-        <th:block th:with="clazz=${T(java.time.format.DateTimeFormatter)},
-          style=${T(java.time.format.FormatStyle).FULL},
-          zone=${T(java.time.ZoneId).systemDefault()},
-          formatter=${clazz.ofLocalizedDate(style).withLocale(#locale).withZone(zone)}">
-            <span th:text="#{home.today.is(${formatter.format(T(java.time.Instant).now())})}" class="float-end"></span>
-        </th:block>
+
+        <span th:insert="~{this :: DateTime(boundleMessage='home.today.is')}"  class="float-end"></span>
     </div>
 </div>
 </body>

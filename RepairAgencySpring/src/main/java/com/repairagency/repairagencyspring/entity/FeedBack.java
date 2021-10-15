@@ -13,15 +13,14 @@ import javax.persistence.*;
 @Entity(name="FeedBack")
 public class FeedBack {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id", nullable = false)
     private Long id;
 
-    private Long whoId;
+    @OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.DETACH,CascadeType.MERGE, CascadeType.REFRESH})
+    @MapsId
+    RepairTask repairTask;
 
-    private Long aboutId;
-
-    private Long taskInfoId;
-
+    @Column(length = 512)
     private String message;
 }

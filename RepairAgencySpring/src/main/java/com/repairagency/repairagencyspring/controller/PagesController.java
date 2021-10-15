@@ -15,23 +15,45 @@ import java.util.Optional;
 @Controller
 public class PagesController {
 
-    final
-    UserRepository userRepository;
+    final UserRepository userRepository;
 
     public PagesController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/")
-    public String mainPage(Authentication authentication)
-    {
+    private String getCorrectPage(Authentication authentication, String basicPage){
         if(authentication != null) {
             final Optional<UserDB> user = userRepository.findByLogin(authentication.getName());
             if(user.isPresent()){
                 return "redirect:"+user.get().getUserRole().getHomePage();
             }
         }
-        return "index";
+        return basicPage;
+    }
+
+    @GetMapping("/")
+    public String mainPage(Authentication authentication)
+    {
+        return getCorrectPage(authentication,"index");
+//        if(authentication != null) {
+//            final Optional<UserDB> user = userRepository.findByLogin(authentication.getName());
+//            if(user.isPresent()){
+//                return "redirect:"+user.get().getUserRole().getHomePage();
+//            }
+//        }
+//        return "index";
+    }
+
+    @GetMapping("/auth/login")
+    public String getLoginPage(Authentication authentication) {
+        return getCorrectPage(authentication,"auth/login");
+//        if (authentication != null) {
+//            final Optional<UserDB> user = userRepository.findByLogin(authentication.getName());
+//            if (user.isPresent()) {
+//                return "redirect:" + user.get().getUserRole().getHomePage();
+//            }
+//        }
+//        return "auth/login";
     }
 
 //    @PreAuthorize("hasAuthority('perm:admin')")

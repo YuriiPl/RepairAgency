@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:lang="${#locale.language}">
+<head th:replace="~{layouts/common :: head}" >
+    <title>None</title>
+</head>
+<body>
+<div th:replace="~{layouts/common :: header}"></div>
+
+<!--<form th:action="@{/}">-->
+<!--    <input type="text" th:name="participant"/>-->
+<!--    <select th:name="country">-->
+<!--        <option value="de">Germany</option>-->
+<!--        <option value="nl">Netherlands</option>-->
+<!--        <option value="pl">Poland</option>-->
+<!--        <option value="lv">Latvia</option>-->
+<!--    </select>-->
+<!--</form>-->
+
+<div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
+    <div class="container">
+        <div>
+    <!--MONEY-->
+            <span class="d-flex justify-content-end" th:text="#{user.your.money(${userMoney})}"></span>
+            <span th:if="${errorMoney ne null}" style="color:red" class="d-flex justify-content-center" th:text="#{user.wrong.money.format(${errorMoney})}"></span>
+            <div style="height: auto; margin:auto 20%;text-align:center" class="d-flex justify-content-center">
+                <div>
+                    <form th:action="@{/account/user/addmoney}" class="row g-1" th:method="post">
+                        <div class="d-flex flex-row bd-highlight mb-3">
+                            <div class="bd-highlight"><label for="addmoney" class="p-2 bd-highlight" th:text="#{user.add.money}">Add money</label></div>
+                            <div class="bd-highlight">
+                                <input th:with="point=${T(java.text.DecimalFormatSymbols).getInstance(#locale).getDecimalSeparator()}" style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" id="addmoney" th:placeholder="'0'+${point}+'00'">
+                            </div>
+                            <div class="bd-highlight">
+                                <button type="submit" class="btn btn-primary ms-2 p-2 bd-highlight" th:text="#{client.money.confirm}">Confirm</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <!-- ADD TASK -->
+            <form th:action="@{/account/user/tasks/add(page=${page.getNumber()},size=${page.getSize()})}" name="sendForm" method="post">
+                <div class="form-group">
+                    <h1>
+                        <label for="add-service" th:text="#{user.formservice.addService}">Service</label>
+                    </h1>
+                    <div class="row" style="--bs-gutter-x:0">
+                        <div class="col-sm">
+                            <select class="form-select form-select-md mr-1" id="add-service" name="serviceId">
+                                <option th:each="service : ${services}" th:text="${service.name}" th:value="${service.id}">
+                                </option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary col-md-auto ms-2" th:text="#{client.formservice.submit}">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div style="text-align: center">
+            <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th th:text="#{user.table.service.client}">CLIENT</th>
+                    <th th:text="#{user.table.service.repairer}">REPAIRER</th>
+                    <th th:text="#{user.table.service.servicename}">SERVICENAME</th>
+                    <th th:text="#{user.table.service.workstatus}">WORKSTATUS</th>
+                    <th th:text="#{user.table.service.paystatus}">PAYSTATUS</th>
+                    <th th:text="#{user.table.service.datecreate}">DATECREATE</th>
+                    <th th:text="#{user.table.service.datefinish}">DATEFINISH</th>
+                    <th th:text="#{user.table.service.price}">PRICE</th>
+                    <th th:text="#{user.table.service.comment}">COMMENT</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="service,iterStat : ${page.content}">
+                    <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
+                    <td th:text="${service.owner.name}">name</td>
+                    <td th:text="${service.repairer?.name}">name</td>
+                    <td th:text="${service.serviceName?.name}">name</td>
+                    <td th:text="#{${service.workStatus.messageId}}">name</td>
+                    <td th:text="#{${service.payStatus.messageId}}" th:id="|pay${service.id}|">name</td>
+                    <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateCreate})}">name</td>
+
+                    <td th:if="${service.dateFinish}" th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateFinish})}">name</td>
+                    <td th:unless="${service.dateFinish}"></td>
+
+                    <td>
+                        <div class="d-flex flex-row bd-highlight justify-content-center">
+                            <span class="p-2 bd-highlight" th:text="|#{number.converter(${service.price?:0.00})}$|"></span>
+                            <button onclick="tryToPay(this)" class="btn btn-primary" th:hidden="${service.payStatus.toString() ne 'WAIT'}" type="button" th:attr="taskId=${service.id}" th:text="#{user.table.service.pay}">...</button>
+                        </div>
+                        <small style="color:red" hidden th:id="|errorPay${service.id}|"></small>
+                    </td>
+
+                    <td style="text-align: center">
+                        <button th:disabled="${(service.workStatus.toString() ne 'DONE') or (service.payStatus.toString() ne 'DONE') }" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow" th:attr="id-bs-url=${service.id}">...</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+        </div>
+
+
+    </div>
+</div>
+
+<div th:replace="~{layouts/common :: modalwindow('modalWindow')}"></div>
+
+<script th:inline="javascript">
+    let modalWindow = document.getElementById('modalWindow')
+    modalWindow.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        let button = event.relatedTarget
+        // Extract info from data-bs-* attributes
+        let id = button.getAttribute('id-bs-url')
+        // If necessary, you could initiate an AJAX request here
+        // and then do the updating in a callback.
+        //
+        // Update the modal's content.
+        let modalTitle = modalWindow.querySelector('.modal-title')
+        //let textArea = modalWindow.querySelector('.modal-body textarea')
+
+        // var xhttp = new XMLHttpRequest();
+        // xhttp.onreadystatechange = function(){
+        //     if(xhttp.readyState===4 && xhttp.status===200){
+        //         modalWindow.querySelector('.modal-body textarea').textContent=xhttp.responseText;
+        //     }
+        // }
+        let xhttp=createAJAX(function (response) {
+                modalWindow.querySelector('.modal-body textarea').textContent = response;
+        });
+        xhttp.open("POST", "/account/user/getcomment/"+id+"?"+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
+        xhttp.send();
+        modalTitle.textContent = /*[[#{user.comment.title}]]*/ 'comment';
+        //modalBodyInput.value = recipient
+        let form = modalWindow.querySelector('#messageForm')
+        form.action='/account/user/addcomment/'+id;
+    });
+
+    function tryToPay(button){
+        let id=button.getAttribute('taskid');
+        let xhttp=createAJAX(function (response) {
+            if(response.status==="ok") {
+                location="/account/user";
+            }
+            if(response.status==="error"){
+                let errorSmall=document.getElementById("errorPay"+response.id);
+                errorSmall.innerText=response.message;
+                errorSmall.removeAttribute("hidden");
+            }
+        },"json");
+        xhttp.open("POST", "/account/user/trytopay/"+id+'?'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
+        xhttp.send();
+    }
+</script>
+
+
+<div th:replace="~{layouts/common :: footer}"></div>
+
+</body>
+</html>

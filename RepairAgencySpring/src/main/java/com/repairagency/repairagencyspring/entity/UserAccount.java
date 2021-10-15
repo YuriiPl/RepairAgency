@@ -18,9 +18,14 @@ public class UserAccount {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column
-    private Long amount;
+    public UserAccount(long amount){
+        this.amount=amount;
+    }
 
-    @OneToOne (mappedBy="account", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @Column(nullable = false)
+    private long amount;
+
+    @OneToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,CascadeType.MERGE, CascadeType.REFRESH},fetch = FetchType.LAZY)
+    @MapsId
     private UserDB owner;
 }

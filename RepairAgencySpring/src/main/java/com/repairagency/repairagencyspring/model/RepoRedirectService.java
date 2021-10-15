@@ -58,6 +58,15 @@ public class RepoRedirectService {
         return "redirect:"+redirectTo+"?"+parametersFromHttpRequest(request);
     }
 
+    public static <T,ID> String save(CrudRepository<T, ID> repo, Object object, String redirectTo, HttpServletRequest request, RedirectAttributes redirectAttributes){
+        try {
+            repo.save((T)object);
+        } catch (Exception ex){
+            redirectAttributes.addFlashAttribute("saveDbError",ex.getMessage());
+        }
+        return "redirect:"+redirectTo+"?"+parametersFromHttpRequest(request);
+    }
+
 
     public static <T,ID> String removeById(CrudRepository<T, ID> repo, ID id, String redirectTo, HttpServletRequest request, RedirectAttributes redirectAttributes){
         try {
