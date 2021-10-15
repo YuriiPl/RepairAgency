@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                   .and()
                     .authorizeRequests()
-                    .antMatchers("/","/js/*","/css/*","/images/*","/api/register", "/account/whoami").permitAll()
+                    .antMatchers("/","/js/*","/css/*","/img/*","/api/register", "/account/whoami").permitAll()
 //////                .antMatchers(HttpMethod.GET, "/api/**").hasAuthority(Authority.AUTHORITY_USER.getAuthority())
 //                    .antMatchers(HttpMethod.GET, "/api/**").hasAuthority(Permission.PERMISSION_READ.getPermission())
 //                    .antMatchers(HttpMethod.POST, "/api/**").hasAuthority(Permission.PERMISSION_WRITE.getPermission())

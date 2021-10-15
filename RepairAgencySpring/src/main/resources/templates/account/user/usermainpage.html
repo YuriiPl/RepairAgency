@@ -98,7 +98,7 @@
                     </td>
 
                     <td style="text-align: center">
-                        <button th:disabled="${service.workStatus.toString() ne 'DONE'}" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow" th:attr="id-bs-url=${service.id}">...</button>
+                        <button th:disabled="${(service.workStatus.toString() ne 'DONE') or (service.payStatus.toString() ne 'DONE') }" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow" th:attr="id-bs-url=${service.id}">...</button>
                     </td>
                 </tr>
                 </tbody>
@@ -132,10 +132,8 @@
         //         modalWindow.querySelector('.modal-body textarea').textContent=xhttp.responseText;
         //     }
         // }
-        let xhttp=createAJAX(function (responce) {
-            if(response.status==="ok") {
-                modalWindow.querySelector('.modal-body textarea').textContent = responce;
-            }
+        let xhttp=createAJAX(function (response) {
+                modalWindow.querySelector('.modal-body textarea').textContent = response;
         });
         xhttp.open("POST", "/account/user/getcomment/"+id+"?"+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
         xhttp.send();
