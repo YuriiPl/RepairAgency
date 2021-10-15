@@ -16,7 +16,7 @@ public class MainPageManagerController {
     public String managerPage()
     {
 
-        return "account/manager/managermainpage";
+        return "redirect:/account/manager/tasks/new";
     }
 
 }
