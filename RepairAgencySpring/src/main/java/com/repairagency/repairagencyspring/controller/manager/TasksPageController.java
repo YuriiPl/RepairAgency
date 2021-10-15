@@ -3,10 +3,10 @@ package com.repairagency.repairagencyspring.controller.manager;
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import com.repairagency.repairagencyspring.entity.PayStatus;
 import com.repairagency.repairagencyspring.entity.RepairTask;
-import com.repairagency.repairagencyspring.repos.FeedBackRepository;
-import com.repairagency.repairagencyspring.repos.RepairTaskRepository;
-import com.repairagency.repairagencyspring.repos.ServiceNameRepository;
-import com.repairagency.repairagencyspring.repos.UserAccountRepository;
+import com.repairagency.repairagencyspring.entity.UserDB;
+import com.repairagency.repairagencyspring.entity.WorkStatus;
+import com.repairagency.repairagencyspring.repos.*;
+import com.repairagency.repairagencyspring.security.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -37,19 +38,21 @@ public class TasksPageController {
     final ServiceNameRepository serviceNameRepository;
     final FeedBackRepository feedBackRepository;
     final ResourceBundleMessageSource resourceBundleMessageSource;
+    final UserRepository userRepository;
 
 
     public TasksPageController(LocaleResolver localeResolver,
                                UserAccountRepository userAccountRepository,
                                RepairTaskRepository repairTaskRepository,
                                ServiceNameRepository serviceNameRepository,
-                               FeedBackRepository feedBackRepository, ResourceBundleMessageSource resourceBundleMessageSource) {
+                               FeedBackRepository feedBackRepository, ResourceBundleMessageSource resourceBundleMessageSource, UserRepository userRepository) {
         this.userAccountRepository=userAccountRepository;
         this.localeResolver=localeResolver;
         this.repairTaskRepository=repairTaskRepository;
         this.serviceNameRepository=serviceNameRepository;
         this.feedBackRepository = feedBackRepository;
         this.resourceBundleMessageSource = resourceBundleMessageSource;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/new")
@@ -65,7 +68,10 @@ public class TasksPageController {
     )
     {
         Page<RepairTaskDTO> page = repairTaskRepository.findAllByIdIsNotNull(pageable);
+        //List<UserDTO> repairers = userRepository.findAllByUserRoleOrderByNameAsc(Role.REPAIRER);
+        List<UserDB> repairers = userRepository.findAllByUserRoleOrderByNameAsc(Role.REPAIRER);
         model.addAttribute("page",page);
+        model.addAttribute("repairers",repairers);
         model.addAttribute("url","new");
         return "account/manager/managernewtasks";
     }
@@ -104,8 +110,10 @@ public class TasksPageController {
         result.put("id",taskId);
         try {
             RepairTask repairTask = repairTaskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
+            if(repairTask.getPayStatus() != PayStatus.DONE){
+                repairTask.setPrice(0L);
+            }
             repairTask.setPayStatus(PayStatus.CANCELED);
-//            repairTask.setPrice(0L);
             repairTaskRepository.save(repairTask);
             result.put("message",resourceBundleMessageSource.getMessage(PayStatus.CANCELED.getMessageId(),null,localeResolver.resolveLocale(request)));
         } catch (TaskNotFoundException ignore){
@@ -127,6 +135,31 @@ public class TasksPageController {
             repairTaskRepository.save(repairTask);
             result.put("message",resourceBundleMessageSource.getMessage(PayStatus.DONE.getMessageId(),null,localeResolver.resolveLocale(request)));
         } catch (TaskNotFoundException ignore){
+            result.put("status","error");
+            result.put("type","wrong");
+        }
+        return result;
+    }
+
+    @PostMapping("/setrepairer/{id}/{idrep}")
+    @ResponseBody
+    public HashMap<String, Object> setRepairer(@PathVariable(value = "id") Long taskId, @PathVariable(value = "idrep") Long userId, HttpServletRequest request){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("status","ok");
+        result.put("id",taskId);
+        try {
+            RepairTask repairTask = repairTaskRepository.findByIdAndWorkStatus(taskId,WorkStatus.FREE).orElseThrow(TaskNotFoundException::new);
+            if(userId==-1){
+                repairTask.setRepairer(null);
+                result.put("message","");
+            } else {
+                UserDB repairer = userRepository.findByIdAndUserRole(userId, Role.REPAIRER).orElseThrow(UserNotFoundException::new);
+                repairTask.setRepairer(repairer);
+                result.put("message",repairer.getName());
+            }
+            repairTask.setWorkStatus(WorkStatus.FREE);
+            repairTaskRepository.save(repairTask);
+        } catch (TaskNotFoundException | UserNotFoundException ignore){
             result.put("status","error");
             result.put("type","wrong");
         }

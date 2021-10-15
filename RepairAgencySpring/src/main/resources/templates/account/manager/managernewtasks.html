@@ -44,12 +44,24 @@
         xhttp.send();
     }
 
+    function setRepairer(button) {
+        let id=button.getAttribute('taskid');
+        let repairerId=button.parentElement.querySelector("select").value;
+        let xhttp=createAJAX(function (response) {
+            if(response.status==="ok"){
+                document.getElementById("repairer"+response.id).innerText=response.message;
+            }
+        },"json");
+        xhttp.open("POST", "/account/manager/tasks/setrepairer/"+id+"/"+repairerId+'?'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
+        xhttp.send();
+    }
+
 </script>
 
 <div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
     <div class="container">
         <h1>
-            <span class="d-flex justify-content-center" th:text="#{manager.newprice.setprice}">Service</span>
+            <span class="d-flex justify-content-center" th:text="#{manager.job.mangmant}">Service</span>
         </h1>
         <div style="text-align: center">
             <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
@@ -60,6 +72,7 @@
                     <th th:text="#{user.table.service.client}">CLIENT</th>
                     <th th:text="#{user.table.service.repairer}">REPAIRER</th>
                     <th th:text="#{user.table.service.servicename}">SERVICENAME</th>
+                    <th th:text="#{user.table.service.workstatus}">WORKSTATUS</th>
                     <th th:text="#{user.table.service.paystatus}">PAYSTATUS</th>
                     <th th:text="#{user.table.service.datecreate}">DATECREATE</th>
                     <th th:text="#{user.table.service.price}">PRICE</th>
@@ -72,9 +85,42 @@
                     <tr th:each="service,iterStat : ${page.content}">
                         <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
                         <td th:text="${service.owner.name}">name</td>
-                        <td th:text="${service.repairer?.name}">name</td>
+
+<!--                        <td th:if="${service.repairer?.name}" th:text="${service.repairer?.name}">name</td>-->
+<!--                        <td th:unless="${service.repairer?.name}">-->
+<!--                            <div class="d-flex flex-row bd-highlight justify-content-center" th:id="|repairer${service.id}|">-->
+<!--                                <label class="pe-1">-->
+<!--                                    <select class="form-select form-select-md mr-1">-->
+<!--                                        <option value="-1"></option>-->
+<!--                                        <th:block th:each="repairer : ${repairers}">-->
+<!--                                            <option th:value="${repairer.id}" th:text="${repairer.name}"></option>-->
+<!--                                        </th:block>-->
+<!--                                    </select>-->
+<!--                                </label>-->
+<!--                                <button type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="setRepairer(this)">Ok</button>-->
+<!--                            </div>-->
+<!--                        </td>-->
+
+                        <td th:if="${service.workStatus ne T(com.repairagency.repairagencyspring.entity.WorkStatus).FREE}" th:text="${service.repairer?.name}">name</td>
+                        <td th:unles="${service.workStatus ne T(com.repairagency.repairagencyspring.entity.WorkStatus).FREE}">
+                            <div class="d-flex flex-row bd-highlight justify-content-center" th:id="|repairer${service.id}|">
+                                <label class="pe-1">
+                                    <select class="form-select form-select-md mr-1">
+                                        <option value="-1"></option>
+                                        <th:block th:each="repairer : ${repairers}">
+                                            <option th:value="${repairer.id}" th:text="${repairer.name}" th:selected="${service.repairer?.name eq repairer.name}"></option>
+                                        </th:block>
+                                    </select>
+                                </label>
+                                <button type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="setRepairer(this)">Ok</button>
+                            </div>
+                        </td>
+
+
                         <td th:text="${service.serviceName?.name}">name</td>
-<!--                        <td th:text="#{${service.payStatus.messageId}}" th:id="|pay${service.id}|">name</td>-->
+
+                        <td th:text="#{${service.workStatus.messageId}}">name</td>
+
                         <td >
                             <div class="d-flex flex-row bd-highlight justify-content-center" th:id="|pay${service.id}|">
                                 <span th:text="#{${service.payStatus.messageId}}" class="p-2"></span>
