@@ -67,7 +67,7 @@ public class TasksPageController {
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)
             })
                 Pageable pageable,
-                RepairTask filterData
+                FilterDataDTO filterData
             )
     {
 //        log.warn(filter.toString());
@@ -87,14 +87,20 @@ public class TasksPageController {
 //            findParam.setWorkStatus(filter.getTaskStatus());
 //        }
 
+        RepairTask filterTask = new RepairTask();
+        filterTask.setWorkStatus(filterData.getWorkStatus());
+        filterTask.setPayStatus(filterData.getPayStatus());
 
         ExampleMatcher matcher = ExampleMatcher.matching();
-        if(filterData.getRepairer() != null && filterData.getRepairer().getName() != null && filterData.getRepairer().getName().length()>0) {
+        if(filterData.getRepairerName() != null && filterData.getRepairerName().length()>0) {
             matcher=matcher.withMatcher("repairer.name", contains().ignoreCase());
+            UserDB repairer= new UserDB();
+            repairer.setName(filterData.getRepairerName());
+            filterTask.setRepairer(repairer);
         } else {
             matcher=matcher.withIgnorePaths("repairer");
         }
-        Example<RepairTask> example = Example.of(filterData, matcher);
+        Example<RepairTask> example = Example.of(filterTask, matcher);
         Page<RepairTask> page = repairTaskRepository.findAll(example, pageable);
 
 //        Page<RepairTaskDTO> page = repairTaskRepository.findAllByIdIsNotNull(pageable);
@@ -102,6 +108,7 @@ public class TasksPageController {
         model.addAttribute("page",page);
         model.addAttribute("repairers",repairers);
         model.addAttribute("url","new");
+        model.addAttribute("filter",filterData);
         return "account/manager/managernewtasks";
     }
 
