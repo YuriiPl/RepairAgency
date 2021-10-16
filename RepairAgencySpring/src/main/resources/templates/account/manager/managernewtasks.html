@@ -144,7 +144,8 @@
                         <td th:text="#{${service.workStatus.messageId}}">name</td>
 
                         <td >
-                            <div class="d-flex flex-row bd-highlight justify-content-center" th:id="|pay${service.id}|">
+<!--                            <div class="d-flex flex-row bd-highlight justify-content-center" th:id="|pay${service.id}|">-->
+                            <div th:id="|pay${service.id}|">
                                 <span th:text="#{${service.payStatus.messageId}}" class="p-2"></span>
                                 <button th:if="${service.payStatus.toString() eq 'PAID'}" type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="acceptPay(this)">Ok</button>
                             </div>

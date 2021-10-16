@@ -20,7 +20,7 @@
     <div class="container">
         <div>
     <!--MONEY-->
-            <span class="d-flex justify-content-end" th:text="#{user.your.money(${userMoney})}"></span>
+            <span class="d-flex justify-content-end" th:utext="|<h3>#{user.your.money(${userMoney})}</h3>|"></span>
             <span th:if="${errorMoney ne null}" style="color:red" class="d-flex justify-content-center" th:text="#{user.wrong.money.format(${errorMoney})}"></span>
             <div style="height: auto; margin:auto 20%;text-align:center" class="d-flex justify-content-center">
                 <div>
