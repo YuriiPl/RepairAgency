@@ -1,5 +1,6 @@
 package com.repairagency.repairagencyspring.controller.manager;
 
+import com.repairagency.repairagencyspring.dto.FilterDataDTO;
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import com.repairagency.repairagencyspring.entity.PayStatus;
 import com.repairagency.repairagencyspring.entity.RepairTask;
@@ -9,12 +10,11 @@ import com.repairagency.repairagencyspring.repos.*;
 import com.repairagency.repairagencyspring.security.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +25,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
 
 @Slf4j
 @Controller
@@ -64,11 +66,38 @@ public class TasksPageController {
                     @SortDefault(sort = "dateCreate", direction = Sort.Direction.DESC),
                     @SortDefault(sort = "id", direction = Sort.Direction.ASC)
             })
-                    Pageable pageable
-    )
+                Pageable pageable,
+                RepairTask filterData
+            )
     {
-        Page<RepairTaskDTO> page = repairTaskRepository.findAllByIdIsNotNull(pageable);
-        //List<UserDTO> repairers = userRepository.findAllByUserRoleOrderByNameAsc(Role.REPAIRER);
+//        log.warn(filter.toString());
+//        RepairTask findParam=new RepairTask();
+//        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("owner.name", "serviceName");;
+//        if(filter.getUserName() != null && filter.getUserName().length()>0) {
+//            matcher=matcher.withMatcher("repairer.name", contains().ignoreCase() );
+//            findParam.setRepairer(new UserDB());
+//            findParam.getRepairer().setName(filter.getUserName());
+//        }
+//        if(filter.getPayStatus() != null){
+//            matcher.withMatcher("payStatus", exact() );
+//            findParam.setPayStatus(filter.getPayStatus());
+//        }
+//        if(filter.getTaskStatus() != null){
+//            matcher.withMatcher("workStatus", exact() );
+//            findParam.setWorkStatus(filter.getTaskStatus());
+//        }
+
+
+        ExampleMatcher matcher = ExampleMatcher.matching();
+        if(filterData.getRepairer() != null && filterData.getRepairer().getName() != null && filterData.getRepairer().getName().length()>0) {
+            matcher=matcher.withMatcher("repairer.name", contains().ignoreCase());
+        } else {
+            matcher=matcher.withIgnorePaths("repairer");
+        }
+        Example<RepairTask> example = Example.of(filterData, matcher);
+        Page<RepairTask> page = repairTaskRepository.findAll(example, pageable);
+
+//        Page<RepairTaskDTO> page = repairTaskRepository.findAllByIdIsNotNull(pageable);
         List<UserDB> repairers = userRepository.findAllByUserRoleOrderByNameAsc(Role.REPAIRER);
         model.addAttribute("page",page);
         model.addAttribute("repairers",repairers);

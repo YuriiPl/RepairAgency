@@ -67,6 +67,40 @@
         </h1>
         <div style="text-align: center">
             <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+
+
+            <form method="get" th:action="@{/account/manager/tasks/new}">
+                <div class="row" style="--bs-gutter-x:0">
+                    <label for="filterName" class="col-auto m-1" th:text="#{manager.filter.repairer}">Repairer name:</label>
+                    <div class="col-auto">
+                        <input class="form-control col-sm" id="filterName" name="repairerName" th:placeholder="#{manager.filter.repairer.name}" placeholder="Repairer name:">
+                    </div>
+                    <label for="filterFinish" class="col-auto m-1" th:text="#{manager.filter.work.status}">Repairer name:</label>
+                    <div class="col-auto">
+                        <select class="form-select form-select-md mr-1" id="filterFinish" name="workStatus">
+                            <option value=""></option>
+                            <th:block th:each="val : ${T(com.repairagency.repairagencyspring.entity.WorkStatus).values()}">
+                                <option th:value="${val.name()}" th:text="#{${val.getMessageId()}}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <label for="filterPay" class="col-auto m-1" th:text="#{manager.filter.pay.status}">Repairer name:</label>
+                    <div class="col-auto">
+                        <select class="form-select form-select-md mr-1" id="filterPay" name="payStatus">
+                            <option value=""></option>
+                            <th:block th:each="val : ${T(com.repairagency.repairagencyspring.entity.PayStatus).values()}">
+                                <option th:value="${val.name()}" th:text="#{${val.getMessageId()}}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <input type="hidden" name="page" th:value="${page.getNumber()}">
+                    <input type="hidden" name="size" th:value="${page.getSize()}">
+                    <button type="submit" class="btn btn-primary col-auto ms-2" th:text="#{manager.filter.filter}">Create</button>
+                </div>
+            </form>
+
+
+
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                 <tr>
