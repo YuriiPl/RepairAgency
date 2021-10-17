@@ -73,14 +73,14 @@
                 <div class="row" style="--bs-gutter-x:0">
                     <label for="filterName" class="col-auto m-1" th:text="#{manager.filter.repairer}">Repairer name:</label>
                     <div class="col-auto">
-                        <input class="form-control col-sm" id="filterName" name="repairerName" th:placeholder="#{manager.filter.repairer.name}" placeholder="Repairer name:">
+                        <input class="form-control col-sm" id="filterName" name="repairerName" th:placeholder="#{manager.filter.repairer.name}" th:value="${filter?.repairerName}">
                     </div>
                     <label for="filterFinish" class="col-auto m-1" th:text="#{manager.filter.work.status}">Repairer name:</label>
                     <div class="col-auto">
                         <select class="form-select form-select-md mr-1" id="filterFinish" name="workStatus">
                             <option value=""></option>
                             <th:block th:each="val : ${T(com.repairagency.repairagencyspring.entity.WorkStatus).values()}">
-                                <option th:value="${val.name()}" th:text="#{${val.getMessageId()}}"></option>
+                                <option th:value="${val.name()}" th:text="#{${val.getMessageId()}}" th:selected="${val eq filter?.getWorkStatus()}"></option>
                             </th:block>
                         </select>
                     </div>
@@ -89,7 +89,7 @@
                         <select class="form-select form-select-md mr-1" id="filterPay" name="payStatus">
                             <option value=""></option>
                             <th:block th:each="val : ${T(com.repairagency.repairagencyspring.entity.PayStatus).values()}">
-                                <option th:value="${val.name()}" th:text="#{${val.getMessageId()}}"></option>
+                                <option th:value="${val.name()}" th:text="#{${val.getMessageId()}}" th:selected="${val eq filter?.getPayStatus()}"></option>
                             </th:block>
                         </select>
                     </div>

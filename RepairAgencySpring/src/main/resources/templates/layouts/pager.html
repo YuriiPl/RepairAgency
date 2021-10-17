@@ -18,7 +18,7 @@
                         <span class="page-link" th:text="${p}"></span>
                     </li>
                     <li th:unless="${(p-1) eq tpage.getNumber()}" class="page-item">
-                        <a class="page-link" th:href="@{|${turl}?page=${p-1}&size=${page.getSize()}|}" th:text="${p}"></a>
+                        <a class="page-link" th:href="@{|${turl}?page=${p-1}&size=${page.getSize()}&${filter?.requestString()}|}" th:text="${p}"></a>
                     </li>
             </th:block>
 <!--            <li class="page-item disabled"><a class="page-link">&DoubleRightArrow;</a></li>-->
@@ -34,7 +34,7 @@
                     <span class="page-link" th:text="${c}"></span>
                 </li>
                 <li th:unless="${c eq tpage.getSize()}" class="page-item">
-                    <a class="page-link" th:href="@{|${turl}?page=${(page.getNumber() gt page.getTotalElements()/c)?(page.getTotalElements()/c):page.getNumber()}&size=${c}|}" th:text="${c}"></a>
+                    <a class="page-link" th:href="@{|${turl}?page=${(page.getNumber() gt page.getTotalElements()/c)?(page.getTotalElements()/c):page.getNumber()}&size=${c}&${filter?.requestString()}|}" th:text="${c}"></a>
                 </li>
             </th:block>
 <!--            <li class="page-item disabled"><a class="page-link">&DoubleRightArrow;</a></li>-->

@@ -25,6 +25,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
 
@@ -102,10 +103,11 @@ public class TasksPageController {
         }
         Example<RepairTask> example = Example.of(filterTask, matcher);
         Page<RepairTask> page = repairTaskRepository.findAll(example, pageable);
+        List<RepairTaskDTO> listDto = page.stream().map(RepairTaskDTO::new).collect(Collectors.toList());
+        Page <RepairTaskDTO> pageDto = new PageImpl<RepairTaskDTO>(listDto,pageable,listDto.size());
 
-//        Page<RepairTaskDTO> page = repairTaskRepository.findAllByIdIsNotNull(pageable);
         List<UserDB> repairers = userRepository.findAllByUserRoleOrderByNameAsc(Role.REPAIRER);
-        model.addAttribute("page",page);
+        model.addAttribute("page",pageDto);
         model.addAttribute("repairers",repairers);
         model.addAttribute("url","new");
         model.addAttribute("filter",filterData);
