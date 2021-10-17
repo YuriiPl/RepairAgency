@@ -70,6 +70,8 @@
 
 
             <form method="get" th:action="@{/account/manager/tasks/new}">
+                <input type="hidden" name="page" th:value="${page.getNumber()}">
+                <input type="hidden" name="size" th:value="${page.getSize()}">
                 <div class="row" style="--bs-gutter-x:0">
                     <label for="filterName" class="col-auto m-1" th:text="#{manager.filter.repairer}">Repairer name:</label>
                     <div class="col-auto">
@@ -93,9 +95,8 @@
                             </th:block>
                         </select>
                     </div>
-                    <input type="hidden" name="page" th:value="${page.getNumber()}">
-                    <input type="hidden" name="size" th:value="${page.getSize()}">
                     <button type="submit" class="btn btn-primary col-auto ms-2" th:text="#{manager.filter.filter}">Create</button>
+                    <button type="button" class="btn btn-primary col-auto ms-2" onclick="filterPay.options.selectedIndex=0; filterFinish.options.selectedIndex=0; filterName.value=''; submit()">X</button>
                 </div>
             </form>
 

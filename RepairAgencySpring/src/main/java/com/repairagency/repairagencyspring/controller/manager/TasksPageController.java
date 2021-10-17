@@ -104,7 +104,7 @@ public class TasksPageController {
         Example<RepairTask> example = Example.of(filterTask, matcher);
         Page<RepairTask> page = repairTaskRepository.findAll(example, pageable);
         List<RepairTaskDTO> listDto = page.stream().map(RepairTaskDTO::new).collect(Collectors.toList());
-        Page <RepairTaskDTO> pageDto = new PageImpl<RepairTaskDTO>(listDto,pageable,listDto.size());
+        Page <RepairTaskDTO> pageDto = new PageImpl<>(listDto,pageable,listDto.size());
 
         List<UserDB> repairers = userRepository.findAllByUserRoleOrderByNameAsc(Role.REPAIRER);
         model.addAttribute("page",pageDto);
