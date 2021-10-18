@@ -13,27 +13,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RepoRedirectService {
 
-//    public static <T,ID> ModelAndView save(CrudRepository<T, ID> repo, Object object, String redirectTo, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes){
-//        ModelAndView modelAndView = new ModelAndView();
-//        if(!br.hasErrors()){
-//            try {
-//                repo.save((T)object);
-//            } catch (Exception ex){
-//                redirectAttributes.addFlashAttribute("saveDbError",ex.getMessage());
-//            }
-//        } else {
-//            Set<String> attributes = br.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toSet());
-//            log.warn(String.valueOf(attributes));
-//            log.warn("validateError");
-//            redirectAttributes.addFlashAttribute("validateError",attributes);
-//        }
-//
-//        RedirectView redirectView = new RedirectView(redirectTo+"?"+parametersFromHttpRequest(request));
-//        redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
-//        modelAndView.setView(redirectView);
-//        return modelAndView;
-//    }
-
     public static String parametersFromHttpRequest(HttpServletRequest request){
         return request.getParameterMap().entrySet().stream()
                 .filter(e-> e.getKey().equals("page")||e.getKey().equals("size"))
@@ -66,7 +45,6 @@ public class RepoRedirectService {
         }
         return "redirect:"+redirectTo+"?"+parametersFromHttpRequest(request);
     }
-
 
     public static <T,ID> String removeById(CrudRepository<T, ID> repo, ID id, String redirectTo, HttpServletRequest request, RedirectAttributes redirectAttributes){
         try {

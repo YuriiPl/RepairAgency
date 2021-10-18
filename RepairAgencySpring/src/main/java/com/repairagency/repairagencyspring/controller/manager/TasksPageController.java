@@ -187,23 +187,6 @@ public class TasksPageController {
         return result;
     }
 
-    @GetMapping("/userslist")
-    public String usersPage(
-            Model model,
-            @PageableDefault(page = 0, size = 10)
-            @SortDefault.SortDefaults({
-//                    @SortDefault(sort = "serviceName.name", direction = Sort.Direction.ASC),
-                    @SortDefault(sort = "dateCreate", direction = Sort.Direction.DESC),
-                    @SortDefault(sort = "id", direction = Sort.Direction.ASC)
-            })
-                    Pageable pageable,
-            FilterDataDTO filterData
-    )
-    {
-
-       return "account/manager/manageruserslistpage";
-    }
-
 }
 
 

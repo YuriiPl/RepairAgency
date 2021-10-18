@@ -5,9 +5,12 @@ import com.repairagency.repairagencyspring.entity.UserDB;
 import com.repairagency.repairagencyspring.entity.UserSex;
 import com.repairagency.repairagencyspring.security.Role;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
+
 import javax.validation.constraints.*;
 import java.util.List;
 
+@Log4j2
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,7 +28,7 @@ public class UserDTO {
         this.userSex=userDB.getUserSex();
         this.userRole=userDB.getUserRole();
         this.moneyCents=userDB.getAccount().getAmount();
-//        this.locked
+        this.locked=userDB.isLocked();
         this.applications=userDB.getRepairTasks();
     }
 
@@ -53,5 +56,11 @@ public class UserDTO {
 
     private Role userRole;
 
+    boolean locked;
+
     Long moneyCents;
+
+    public Float moneyValue(){
+        return ((float)moneyCents)/100;
+    }
 }

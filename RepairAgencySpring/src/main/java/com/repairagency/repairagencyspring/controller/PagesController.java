@@ -42,11 +42,4 @@ public class PagesController {
         return getCorrectPage(authentication,"auth/login");
     }
 
-//    @PreAuthorize("hasAuthority('perm:admin')")
-//    @GetMapping("/test")
-//    public String errorPage(HttpServletRequest request, Model model)
-//    {
-//        return "index";
-//    }
-
 }
