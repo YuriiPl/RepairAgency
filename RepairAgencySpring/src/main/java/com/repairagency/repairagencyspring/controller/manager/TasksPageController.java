@@ -71,23 +71,6 @@ public class TasksPageController {
                 FilterDataDTO filterData
             )
     {
-//        log.warn(filter.toString());
-//        RepairTask findParam=new RepairTask();
-//        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("owner.name", "serviceName");;
-//        if(filter.getUserName() != null && filter.getUserName().length()>0) {
-//            matcher=matcher.withMatcher("repairer.name", contains().ignoreCase() );
-//            findParam.setRepairer(new UserDB());
-//            findParam.getRepairer().setName(filter.getUserName());
-//        }
-//        if(filter.getPayStatus() != null){
-//            matcher.withMatcher("payStatus", exact() );
-//            findParam.setPayStatus(filter.getPayStatus());
-//        }
-//        if(filter.getTaskStatus() != null){
-//            matcher.withMatcher("workStatus", exact() );
-//            findParam.setWorkStatus(filter.getTaskStatus());
-//        }
-
         RepairTask filterTask = new RepairTask();
         filterTask.setWorkStatus(filterData.getWorkStatus());
         filterTask.setPayStatus(filterData.getPayStatus());
@@ -202,6 +185,23 @@ public class TasksPageController {
             result.put("type","wrong");
         }
         return result;
+    }
+
+    @GetMapping("/userslist")
+    public String usersPage(
+            Model model,
+            @PageableDefault(page = 0, size = 10)
+            @SortDefault.SortDefaults({
+//                    @SortDefault(sort = "serviceName.name", direction = Sort.Direction.ASC),
+                    @SortDefault(sort = "dateCreate", direction = Sort.Direction.DESC),
+                    @SortDefault(sort = "id", direction = Sort.Direction.ASC)
+            })
+                    Pageable pageable,
+            FilterDataDTO filterData
+    )
+    {
+
+       return "account/manager/manageruserslistpage";
     }
 
 }
