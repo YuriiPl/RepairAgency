@@ -8,7 +8,7 @@
 
 <script th:inline="javascript">
     function sendPrice(button) {
-        let editor=button.parentElement.querySelector("input[name='money']");
+        let editor=button.parentElement.querySelector("input[nameid='money']");
         let money=editor.value;
         editor.value="";
         let id=button.getAttribute('taskid');
@@ -101,19 +101,46 @@
             </form>
 
 
+            <form action="/account/manager/tasks/new" method="GET" id="sortForm">
+                <input type="hidden" name="page" th:value="${page.getNumber()}">
+                <input type="hidden" name="size" th:value="${page.getSize()}">
+                <input type="hidden" name="repairerName" th:value="${filter?.repairerName}">
+                <input type="hidden" name="workStatus" th:value="${filter?.getWorkStatus()}">
+                <input type="hidden" name="payStatus" th:value="${filter?.getPayStatus()}">
+                <input type="hidden" name="sort" value="" id="sort">
+                <input type="submit" hidden>
+            </form>
 
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th>
+                        #
+                        <i class="bi bi-chevron-bar-expand" onclick="sort.value=''; sortForm.submit();"></i>
+                    </th>
                     <th th:text="#{user.table.service.client}">CLIENT</th>
                     <th th:text="#{user.table.service.repairer}">REPAIRER</th>
                     <th th:text="#{user.table.service.servicename}">SERVICENAME</th>
-                    <th th:text="#{user.table.service.workstatus}">WORKSTATUS</th>
-                    <th th:text="#{user.table.service.paystatus}">PAYSTATUS</th>
-                    <th th:text="#{user.table.service.datecreate}">DATECREATE</th>
-                    <th th:text="#{user.table.service.price}">PRICE</th>
-<!--                    <th th:text="#{user.table.service.setprice}">SETPRICE</th>-->
+                    <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'workStatus: DESC')?'bi-caret-down-fill':'bi-caret-down'}" onclick="sort.value='workStatus,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.workstatus}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'workStatus: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='workStatus,asc'; sortForm.submit();"></i>
+                    </th>
+                    <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'payStatus: DESC')?' bi-caret-down-fill':' bi-caret-down'}" onclick="sort.value='payStatus,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.paystatus}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'payStatus: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='payStatus,asc'; sortForm.submit();"></i>
+                    </th>
+                    <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'dateCreate: DESC')?' bi-caret-down-fill':' bi-caret-down'}" onclick="sort.value='dateCreate,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.datecreate}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'dateCreate: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='dateCreate,asc'; sortForm.submit();"></i>
+                    </th>
+                    <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'price: DESC')?' bi-caret-down-fill':' bi-caret-down'}" onclick="sort.value='price,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.price}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'price: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='price,asc'; sortForm.submit();"></i>
+                    </th>
                     <th th:text="#{user.table.service.cancel}">CANCEL</th>
                 </tr>
                 </thead>
@@ -155,7 +182,7 @@
                         <td th:unless="${service.payStatus.toString() eq 'FREE'}" th:text="|#{number.converter(${service.price?:0.00})}$|" th:id="|money${service.id}|">name</td>
                         <td th:if="${service.payStatus.toString() eq 'FREE'}" th:id="|money${service.id}|">
                             <div class="d-flex flex-row bd-highlight justify-content-center">
-                                <input style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" th:placeholder="'0'+${point}+'00'">
+                                <input style="width: 5em" required nameid="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" th:placeholder="'0'+${point}+'00'">
                                 <button type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="sendPrice(this)">Ok</button>
                             </div>
                         </td>
