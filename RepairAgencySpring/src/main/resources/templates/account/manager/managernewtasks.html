@@ -60,7 +60,7 @@
 
 </script>
 
-<div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
+<div class="container-fluid" style="margin: 1px auto">
     <div class="container">
         <h1>
             <span class="d-flex justify-content-center" th:text="#{manager.job.mangmant}">Service</span>
@@ -137,6 +137,11 @@
                         <i class="bi" th:classappend="${(page.getSort().toString() eq 'dateCreate: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='dateCreate,asc'; sortForm.submit();"></i>
                     </th>
                     <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'dateFinish: DESC')?' bi-caret-down-fill':' bi-caret-down'}" onclick="sort.value='dateFinish,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.datefinish}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'dateFinish: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='dateFinish,asc'; sortForm.submit();"></i>
+                    </th>
+                    <th>
                         <i class="bi" th:classappend="${(page.getSort().toString() eq 'price: DESC')?' bi-caret-down-fill':' bi-caret-down'}" onclick="sort.value='price,desc'; sortForm.submit();"></i>
                         [[#{user.table.service.price}]]
                         <i class="bi" th:classappend="${(page.getSort().toString() eq 'price: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='price,asc'; sortForm.submit();"></i>
@@ -149,8 +154,6 @@
                     <tr th:each="service,iterStat : ${page.content}">
                         <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
                         <td th:text="${service.owner.name}">name</td>
-
-
                         <td th:if="${service.workStatus.toString() ne 'FREE'}" th:text="${service.repairer?.name}">name</td>
                         <td th:if="${service.workStatus.toString() eq 'FREE'}">
                             <div class="d-flex flex-row bd-highlight justify-content-center" th:id="|repairer${service.id}|">
@@ -165,21 +168,17 @@
                                 <button type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="setRepairer(this)">Ok</button>
                             </div>
                         </td>
-
-
                         <td th:text="${service.serviceName?.name}">name</td>
-
                         <td th:text="#{${service.workStatus.messageId}}">name</td>
-
                         <td >
-<!--                            <div class="d-flex flex-row bd-highlight justify-content-center" th:id="|pay${service.id}|">-->
                             <div th:id="|pay${service.id}|">
                                 <span th:text="#{${service.payStatus.messageId}}" class="p-2"></span>
                                 <button th:if="${service.payStatus.toString() eq 'PAID'}" type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="acceptPay(this)">Ok</button>
                             </div>
                         </td>
-                        <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateCreate})}">name</td>
-                        <td th:unless="${service.payStatus.toString() eq 'FREE'}" th:text="|#{number.converter(${service.price?:0.00})}$|" th:id="|money${service.id}|">name</td>
+                        <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateCreate})}">12-12-2020 12:12</td>
+                        <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateFinish})}">12-12-2020 12:12</td>
+                        <td th:unless="${service.payStatus.toString() eq 'FREE'}" th:text="|#{number.converter(${service.price?:0.00})}$|" th:id="|money${service.id}|">10.5</td>
                         <td th:if="${service.payStatus.toString() eq 'FREE'}" th:id="|money${service.id}|">
                             <div class="d-flex flex-row bd-highlight justify-content-center">
                                 <input style="width: 5em" required nameid="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" th:placeholder="'0'+${point}+'00'">
