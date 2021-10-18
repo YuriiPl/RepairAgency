@@ -3,7 +3,9 @@ package com.repairagency.repairagencyspring.controller.manager;
 import com.repairagency.repairagencyspring.DAO.BalanceDAO;
 import com.repairagency.repairagencyspring.DAO.BalanceTransactionException;
 import com.repairagency.repairagencyspring.dto.UserDTO;
+import com.repairagency.repairagencyspring.entity.UserDB;
 import com.repairagency.repairagencyspring.repos.UserRepository;
+import com.repairagency.repairagencyspring.security.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -94,6 +97,26 @@ public class RootManagerPageController {
         } catch (ParseException | BalanceTransactionException ignore){
             result.put("status","error");
             result.put("message","parse");
+        }
+        return result;
+    }
+
+    @PostMapping("/lock")
+    @ResponseBody
+    public HashMap<String, Object> lockUser(@RequestParam(value = "locked") boolean locked, @RequestParam(value = "user") String userName, HttpServletRequest request)
+    {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("status","ok");
+        Optional<UserDB> userDBOptional = userRepository.findByLogin(userName);
+        if(userDBOptional.isPresent()){
+            UserDB user = userDBOptional.get();
+            if(user.getUserRole() == Role.MANAGER && locked){locked=false;}
+            user.setLocked(locked);
+            userRepository.save(user);
+            result.put("message",locked);
+        } else {
+            result.put("status","false");
+            result.put("message","notfound");
         }
         return result;
     }

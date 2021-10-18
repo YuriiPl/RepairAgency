@@ -23,6 +23,22 @@
         xhttp.open("POST", "/account/manager/addmoney?money="+input.value+'&user='+userLogin+'&'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
         xhttp.send();
     }
+
+    function setLock(checkbox) {
+        let id=checkbox.getAttribute("checkPos");
+        let input=document.querySelector("input[inputPos='"+id+"']");
+        let userLogin=input.getAttribute("userLogin");
+        let xhttp=createAJAX(function (response) {
+            if(response.status==="ok") {
+                //alert("Ok");
+                console.log(response.message);
+                checkbox.checked = response.message === true;
+            }
+        },"json");
+        xhttp.open("POST", "/account/manager/lock?locked="+checkbox.checked+'&user='+userLogin+'&'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
+        xhttp.send();
+
+    }
 </script>
 
 
@@ -67,7 +83,7 @@
                             </div>
                         </td>
                         <td>
-                            <input type="checkbox" th:checked="${user.locked}">
+                            <input type="checkbox" th:checked="${user.locked}" th:attr="checkPos=${iterStat.index}" onchange="setLock(this)">
                         </td>
 <!--                        <td><button type="button" class="btn-close" aria-label="Close" th:attr="onclick=|location='user/rm/${service.id}?page=${page.getNumber()}&size=${page.getSize()}'|"></button></td>-->
                     </tr>
