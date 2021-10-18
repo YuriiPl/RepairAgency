@@ -6,6 +6,81 @@
 <body>
 <div th:replace="~{layouts/common :: header}"></div>
 
+<script th:inline="javascript">
+    function sendPrice(button) {
+        let id=button.getAttribute("userPos");
+        let input=document.querySelector("input[inputPos='"+id+"']");
+        let userLogin=input.getAttribute("userLogin");
+        let xhttp=createAJAX(function (response) {
+            if(response.status==="ok") {
+                // document.getElementById("pay" + response.id).innerText = response.message;
+                // document.getElementById("money" + response.id).innerText = response.money + "$";
+                input.value='';
+                let balanseTd=document.querySelector("span[balancePos='"+id+"']");
+                balanseTd.innerHTML=response.money;
+            }
+        },"json");
+        xhttp.open("POST", "/account/manager/addmoney?money="+input.value+'&user='+userLogin+'&'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
+        xhttp.send();
+    }
+</script>
+
+
+<div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
+    <div class="container">
+        <div style="height: auto; margin:auto 20%;text-align:center">
+
+            <div style="margin-top: 10px">
+                <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+                <table class="table table-striped table-bordered table-hover">
+                    <colgroup>
+                        <col span="1" style="width: 5%;">
+                        <col span="1">
+                        <col span="1">
+                        <col span="1" style="width: 20%;">
+                        <col span="1" style="width: 20%;">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th th:text="#{manager.users.name}">NAME</th>
+                        <th th:text="#{manager.users.balance}">BALANCE</th>
+                        <th th:text="#{manager.users.add.money}">ADD MONEY</th>
+                        <th th:text="#{manager.users.block.user}">BLOCK USER</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user,iterStat : ${page.content}">
+                        <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
+                        <td th:text="${user.login}">name</td>
+                        <td>
+                            <span th:text="#{number.converter(${user.moneyValue()})}" th:attr="balancePos=${iterStat.index}"></span>$
+                        </td>
+                        <td>
+<!--                            <span th:text="|#{number.converter(${user.moneyValue()?:0.00})}$|"></span>-->
+<!--                            <input type="text" th:value="|#{number.converter(0.00)}$|" th:placeholder="#{number.converter(0.00)}" >-->
+                            <div class="d-flex flex-row bd-highlight justify-content-center" id="repairer4">
+                                <th:block th:with="point=${T(java.text.DecimalFormatSymbols).getInstance(#locale).getDecimalSeparator()}">
+                                    <input type="text" th:attr="inputPos=${iterStat.index}, userLogin=${user.login}" class="form-control p-2 bd-highlight text-end" style="width: 5em" th:placeholder="'0'+${point}+'00'">
+                                    <button type="button" class="btn btn-primary" th:attr="userPos=${iterStat.index}" onclick="sendPrice(this)">Ok</button>
+                                </th:block>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="checkbox" th:checked="${user.locked}">
+                        </td>
+<!--                        <td><button type="button" class="btn-close" aria-label="Close" th:attr="onclick=|location='user/rm/${service.id}?page=${page.getNumber()}&size=${page.getSize()}'|"></button></td>-->
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 
 <div th:replace="~{layouts/common :: footer}"></div>
