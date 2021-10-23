@@ -1,4 +1,4 @@
-package com.repairagency.repairagencyspring.controller.user;
+package com.repairagency.repairagencyspring.DAO.Exceptions;
 
 public class CommentCreateException extends RuntimeException {
 }

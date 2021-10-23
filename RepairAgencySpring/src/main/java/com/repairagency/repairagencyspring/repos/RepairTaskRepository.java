@@ -15,7 +15,8 @@ import java.util.Optional;
 
 @Repository
 public interface RepairTaskRepository extends JpaRepository<RepairTask, Long> {
-    Page<RepairTaskDTO> findByOwner(UserDB userDB, Pageable pageable);
+
+    Page<RepairTaskDTO> findByOwner_Login (String login, Pageable pageable);
 
     Optional<RepairTask> findByOwner_LoginAndIdAndWorkStatus(String name, Long id, WorkStatus done);
 

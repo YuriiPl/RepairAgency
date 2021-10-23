@@ -59,8 +59,6 @@ public class UserDB {
     @Column(name = "Role")
     private Role userRole;
 
-//    @OneToOne (fetch=FetchType.LAZY, optional=false, cascade=CascadeType.ALL)
-//    @JoinColumn (name="account_id")
     @OneToOne(mappedBy = "owner", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     UserAccount account;
