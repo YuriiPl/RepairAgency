@@ -1,6 +1,6 @@
 package com.repairagency.repairagencyspring.controller.manager;
 
-import com.repairagency.repairagencyspring.DAO.manager.RootManagerPageService;
+import com.repairagency.repairagencyspring.DAO.manager.ManagerUsersPageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,12 +18,12 @@ import java.util.HashMap;
 @Controller
 @PreAuthorize("hasAuthority('perm:manager')")
 @RequestMapping(value = "/account/manager")
-public class RootManagerPageController {
+public class ManagerUsersPageController {
 
-    private final RootManagerPageService rootManagerPageService;
+    private final ManagerUsersPageService managerUsersPageService;
 
-    public RootManagerPageController(RootManagerPageService rootManagerPageService) {
-        this.rootManagerPageService = rootManagerPageService;
+    public ManagerUsersPageController(ManagerUsersPageService managerUsersPageService) {
+        this.managerUsersPageService = managerUsersPageService;
     }
 
     @GetMapping("")
@@ -43,7 +43,7 @@ public class RootManagerPageController {
                     Pageable pageable
     )
     {
-        model.addAttribute("page", rootManagerPageService.getPageUserDTO(pageable));
+        model.addAttribute("page", managerUsersPageService.getPageUserDTO(pageable));
         model.addAttribute("url","userslist");
         return "account/manager/manageruserslistpage";
     }
@@ -53,14 +53,14 @@ public class RootManagerPageController {
     @ResponseBody
     public HashMap<String, Object> addMoneyPage(@RequestParam(value = "money") String money, @RequestParam(value = "user") String userName, HttpServletRequest request)
     {
-        return rootManagerPageService.addMoneyManagerToUser(money, userName, request);
+        return managerUsersPageService.addMoneyManagerToUser(money, userName, request);
     }
 
     @PostMapping("/lock")
     @ResponseBody
     public HashMap<String, Object> lockUser(@RequestParam(value = "locked") boolean locked, @RequestParam(value = "user") String userName)
     {
-        return rootManagerPageService.lockUser(locked,userName);
+        return managerUsersPageService.lockUser(locked,userName);
     }
 
 }

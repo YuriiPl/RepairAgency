@@ -22,14 +22,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class RootManagerPageService {
+public class ManagerUsersPageService {
 
     private final UserRepository userRepository;
     private final LocaleResolver localeResolver;
     private final ResourceBundleMessageSource resourceBundleMessageSource;
     private final BalanceDAO balanceDAO;
 
-    public RootManagerPageService(UserRepository userRepository, LocaleResolver localeResolver, ResourceBundleMessageSource resourceBundleMessageSource, BalanceDAO balanceDAO) {
+    public ManagerUsersPageService(UserRepository userRepository, LocaleResolver localeResolver, ResourceBundleMessageSource resourceBundleMessageSource, BalanceDAO balanceDAO) {
         this.userRepository = userRepository;
         this.localeResolver = localeResolver;
         this.resourceBundleMessageSource = resourceBundleMessageSource;
