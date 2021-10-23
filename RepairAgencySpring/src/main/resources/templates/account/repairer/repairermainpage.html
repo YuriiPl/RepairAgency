@@ -40,6 +40,7 @@
                     <th th:text="#{user.table.service.paystatus}">PAYSTATUS</th>
                     <th th:text="#{user.table.service.datecreate}">DATECREATE</th>
                     <th th:text="#{user.table.service.datefinish}">DATEFINISH</th>
+                    <th th:text="#{user.table.service.feedback}">FEEDBACK</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -62,6 +63,10 @@
                     <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateCreate})}">name</td>
                     <td th:if="${service.dateFinish}" th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateFinish})}">name</td>
                     <td th:unless="${service.dateFinish}"></td>
+                    <td>
+                        <span hidden th:text="${service.feedBack}" th:id="|feedBack${iterStat.index}|"></span>
+                        <button th:attr="taskId=${iterStat.index}" th:disabled="${(service.workStatus.toString() ne 'DONE') or (service.payStatus.toString() ne 'DONE') }" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow">...</button>
+                    </td>
 
                 </tr>
                 </tbody>
@@ -73,7 +78,21 @@
     </div>
 </div>
 
+<div th:replace="~{layouts/common :: modalwindow('modalWindow')}"></div>
 
+<script th:inline="javascript">
+    let modalWindow = document.getElementById('modalWindow')
+    modalWindow.addEventListener('show.bs.modal', function (event) {
+        let button = event.relatedTarget
+        let pos = button.getAttribute('taskId')
+        let modalTitle = modalWindow.querySelector('.modal-title')
+        let modalBody = modalWindow.querySelector('#modalBody')
+        let saveButton = modalWindow.querySelector(".btn-primary")
+        saveButton.setAttribute("hidden", true);
+        modalTitle.innerText=[[#{user.table.service.feedback}]]
+        modalBody.innerText=document.getElementById("feedBack"+pos).innerText;
+    });
+</script>
 
 
 
