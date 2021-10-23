@@ -2,6 +2,8 @@ package com.repairagency.repairagencyspring.entity;
 
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;

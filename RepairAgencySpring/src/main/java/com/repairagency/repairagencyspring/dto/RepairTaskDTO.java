@@ -25,6 +25,7 @@ public class RepairTaskDTO {
         this.dateFinish=repairTask.getDateFinish();
         this.price = repairTask.getPrice()==null?null:repairTask.getPrice().floatValue()/100;
         this.id=repairTask.getId();
+        this.feedBack=repairTask.getFeedBack()==null?"":repairTask.getFeedBack().getMessage()==null?"":repairTask.getFeedBack().getMessage();
     }
 
     private Long id;
@@ -45,9 +46,12 @@ public class RepairTaskDTO {
 
     private Float price;
 
+    private String feedBack;
+
     public Long getLongPrice() {
         if(price==null)return null;
         return (long)(price*100);
     }
+
 
 }

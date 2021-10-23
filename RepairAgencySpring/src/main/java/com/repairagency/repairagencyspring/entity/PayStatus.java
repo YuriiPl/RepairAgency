@@ -1,11 +1,11 @@
 package com.repairagency.repairagencyspring.entity;
 
 public enum PayStatus {
-    DONE("paystatus.pay.done"),
-    PAID("paystatus.pay.paid"),
+    FREE("paystatus.pay.free"),
     WAIT("paystatus.pay.wait"),
-    CANCELED("paystatus.pay.canceled"),
-    FREE("paystatus.pay.free");
+    PAID("paystatus.pay.paid"),
+    DONE("paystatus.pay.done"),
+    CANCELED("paystatus.pay.canceled");
 
     private final String messageId;
 

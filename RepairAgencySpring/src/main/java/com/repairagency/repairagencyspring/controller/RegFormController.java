@@ -4,6 +4,7 @@ package com.repairagency.repairagencyspring.controller;
 import com.repairagency.repairagencyspring.dto.UserDTO;
 import com.repairagency.repairagencyspring.entity.UserDB;
 import com.repairagency.repairagencyspring.repos.UserRepository;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -19,7 +20,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
+@Log4j2
 @Controller
 @RequestMapping(value = "/api")
 public class RegFormController {

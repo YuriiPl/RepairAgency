@@ -1,6 +1,6 @@
-package com.repairagency.repairagencyspring.model;
+package com.repairagency.repairagencyspring.DAO;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.validation.BindingResult;
@@ -10,29 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
+@Log4j2
 public class RepoRedirectService {
-
-//    public static <T,ID> ModelAndView save(CrudRepository<T, ID> repo, Object object, String redirectTo, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes){
-//        ModelAndView modelAndView = new ModelAndView();
-//        if(!br.hasErrors()){
-//            try {
-//                repo.save((T)object);
-//            } catch (Exception ex){
-//                redirectAttributes.addFlashAttribute("saveDbError",ex.getMessage());
-//            }
-//        } else {
-//            Set<String> attributes = br.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toSet());
-//            log.warn(String.valueOf(attributes));
-//            log.warn("validateError");
-//            redirectAttributes.addFlashAttribute("validateError",attributes);
-//        }
-//
-//        RedirectView redirectView = new RedirectView(redirectTo+"?"+parametersFromHttpRequest(request));
-//        redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
-//        modelAndView.setView(redirectView);
-//        return modelAndView;
-//    }
 
     public static String parametersFromHttpRequest(HttpServletRequest request){
         return request.getParameterMap().entrySet().stream()
@@ -41,32 +20,28 @@ public class RepoRedirectService {
                 .collect(Collectors.joining("&"));
     }
 
-    public static <T,ID> String save(CrudRepository<T, ID> repo, Object object, String redirectTo, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes){
-        log.warn(String.valueOf(br.hasErrors()));
+    public static <T,ID> String save(CrudRepository<T, ID> repo, T object, String redirectTo, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes){
         if(!br.hasErrors()){
-            log.warn(String.valueOf(br.hasErrors()));
             try {
-                repo.save((T)object);
+                repo.save(object);
             } catch (Exception ex){
                 redirectAttributes.addFlashAttribute("saveDbError",ex.getMessage());
             }
         } else {
-            log.warn(String.valueOf(br.hasErrors()));
             Set<String> attributes = br.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toSet());
             redirectAttributes.addFlashAttribute("validateError",attributes);
         }
         return "redirect:"+redirectTo+"?"+parametersFromHttpRequest(request);
     }
 
-    public static <T,ID> String save(CrudRepository<T, ID> repo, Object object, String redirectTo, HttpServletRequest request, RedirectAttributes redirectAttributes){
+    public static <T,ID> String save(CrudRepository<T, ID> repo, T object, String redirectTo, HttpServletRequest request, RedirectAttributes redirectAttributes){
         try {
-            repo.save((T)object);
+            repo.save(object);
         } catch (Exception ex){
             redirectAttributes.addFlashAttribute("saveDbError",ex.getMessage());
         }
         return "redirect:"+redirectTo+"?"+parametersFromHttpRequest(request);
     }
-
 
     public static <T,ID> String removeById(CrudRepository<T, ID> repo, ID id, String redirectTo, HttpServletRequest request, RedirectAttributes redirectAttributes){
         try {

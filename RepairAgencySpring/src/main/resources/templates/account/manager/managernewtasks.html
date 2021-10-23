@@ -8,7 +8,7 @@
 
 <script th:inline="javascript">
     function sendPrice(button) {
-        let editor=button.parentElement.querySelector("input[name='money']");
+        let editor=button.parentElement.querySelector("input[nameid='money']");
         let money=editor.value;
         editor.value="";
         let id=button.getAttribute('taskid');
@@ -60,25 +60,93 @@
 
 </script>
 
-<div class="container-fluid" style="max-width: 1200px; margin: 1px auto">
+<div class="container-fluid" style="margin: 1px auto">
     <div class="container">
         <h1>
             <span class="d-flex justify-content-center" th:text="#{manager.job.mangmant}">Service</span>
         </h1>
         <div style="text-align: center">
             <div th:replace="~{layouts/pager :: pager(${url},${page})}"></div>
+
+
+            <form method="get" th:action="@{/account/manager/tasks/new}">
+                <input type="hidden" name="page" th:value="${page.getNumber()}">
+                <input type="hidden" name="size" th:value="${page.getSize()}">
+                <div class="row" style="--bs-gutter-x:0">
+                    <label for="filterName" class="col-auto m-1" th:text="#{manager.filter.repairer}">Repairer name:</label>
+                    <div class="col-auto">
+                        <input class="form-control col-sm" id="filterName" name="repairerName" th:placeholder="#{manager.filter.repairer.name}" th:value="${filter?.repairerName}">
+                    </div>
+                    <label for="filterFinish" class="col-auto m-1" th:text="#{manager.filter.work.status}">Repairer name:</label>
+                    <div class="col-auto">
+                        <select class="form-select form-select-md mr-1" id="filterFinish" name="workStatus">
+                            <option value=""></option>
+                            <th:block th:each="val : ${T(com.repairagency.repairagencyspring.entity.WorkStatus).values()}">
+                                <option th:value="${val.name()}" th:text="#{${val.getMessageId()}}" th:selected="${val eq filter?.getWorkStatus()}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <label for="filterPay" class="col-auto m-1" th:text="#{manager.filter.pay.status}">Repairer name:</label>
+                    <div class="col-auto">
+                        <select class="form-select form-select-md mr-1" id="filterPay" name="payStatus">
+                            <option value=""></option>
+                            <th:block th:each="val : ${T(com.repairagency.repairagencyspring.entity.PayStatus).values()}">
+                                <option th:value="${val.name()}" th:text="#{${val.getMessageId()}}" th:selected="${val eq filter?.getPayStatus()}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary col-auto ms-2" th:text="#{manager.filter.filter}">Create</button>
+                    <button type="button" class="btn btn-primary col-auto ms-2" onclick="filterPay.options.selectedIndex=0; filterFinish.options.selectedIndex=0; filterName.value=''; submit()">X</button>
+                </div>
+            </form>
+
+
+            <form action="/account/manager/tasks/new" method="GET" id="sortForm">
+                <input type="hidden" name="page" th:value="${page.getNumber()}">
+                <input type="hidden" name="size" th:value="${page.getSize()}">
+                <input type="hidden" name="repairerName" th:value="${filter?.repairerName}">
+                <input type="hidden" name="workStatus" th:value="${filter?.getWorkStatus()}">
+                <input type="hidden" name="payStatus" th:value="${filter?.getPayStatus()}">
+                <input type="hidden" name="sort" value="" id="sort">
+                <input type="submit" hidden>
+            </form>
+
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th>
+                        #
+                        <i class="bi bi-chevron-bar-expand" onclick="sort.value=''; sortForm.submit();"></i>
+                    </th>
                     <th th:text="#{user.table.service.client}">CLIENT</th>
                     <th th:text="#{user.table.service.repairer}">REPAIRER</th>
                     <th th:text="#{user.table.service.servicename}">SERVICENAME</th>
-                    <th th:text="#{user.table.service.workstatus}">WORKSTATUS</th>
-                    <th th:text="#{user.table.service.paystatus}">PAYSTATUS</th>
-                    <th th:text="#{user.table.service.datecreate}">DATECREATE</th>
-                    <th th:text="#{user.table.service.price}">PRICE</th>
-<!--                    <th th:text="#{user.table.service.setprice}">SETPRICE</th>-->
+                    <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'workStatus: DESC')?'bi-caret-down-fill':'bi-caret-down'}" onclick="sort.value='workStatus,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.workstatus}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'workStatus: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='workStatus,asc'; sortForm.submit();"></i>
+                    </th>
+                    <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'payStatus: DESC')?' bi-caret-down-fill':' bi-caret-down'}" onclick="sort.value='payStatus,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.paystatus}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'payStatus: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='payStatus,asc'; sortForm.submit();"></i>
+                    </th>
+                    <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'dateCreate: DESC')?' bi-caret-down-fill':' bi-caret-down'}" onclick="sort.value='dateCreate,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.datecreate}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'dateCreate: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='dateCreate,asc'; sortForm.submit();"></i>
+                    </th>
+                    <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'dateFinish: DESC')?' bi-caret-down-fill':' bi-caret-down'}" onclick="sort.value='dateFinish,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.datefinish}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'dateFinish: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='dateFinish,asc'; sortForm.submit();"></i>
+                    </th>
+                    <th>
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'price: DESC')?' bi-caret-down-fill':' bi-caret-down'}" onclick="sort.value='price,desc'; sortForm.submit();"></i>
+                        [[#{user.table.service.price}]]
+                        <i class="bi" th:classappend="${(page.getSort().toString() eq 'price: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='price,asc'; sortForm.submit();"></i>
+                    </th>
+                    <th th:text="#{user.table.service.feedback}">FEEDBACK</th>
                     <th th:text="#{user.table.service.cancel}">CANCEL</th>
                 </tr>
                 </thead>
@@ -87,8 +155,6 @@
                     <tr th:each="service,iterStat : ${page.content}">
                         <td th:text="${iterStat.index+1+page.getNumber()*page.getSize()}">index</td>
                         <td th:text="${service.owner.name}">name</td>
-
-
                         <td th:if="${service.workStatus.toString() ne 'FREE'}" th:text="${service.repairer?.name}">name</td>
                         <td th:if="${service.workStatus.toString() eq 'FREE'}">
                             <div class="d-flex flex-row bd-highlight justify-content-center" th:id="|repairer${service.id}|">
@@ -103,25 +169,26 @@
                                 <button type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="setRepairer(this)">Ok</button>
                             </div>
                         </td>
-
-
                         <td th:text="${service.serviceName?.name}">name</td>
-
                         <td th:text="#{${service.workStatus.messageId}}">name</td>
-
                         <td >
-                            <div class="d-flex flex-row bd-highlight justify-content-center" th:id="|pay${service.id}|">
+                            <div th:id="|pay${service.id}|">
                                 <span th:text="#{${service.payStatus.messageId}}" class="p-2"></span>
                                 <button th:if="${service.payStatus.toString() eq 'PAID'}" type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="acceptPay(this)">Ok</button>
                             </div>
                         </td>
-                        <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateCreate})}">name</td>
-                        <td th:unless="${service.payStatus.toString() eq 'FREE'}" th:text="|#{number.converter(${service.price?:0.00})}$|" th:id="|money${service.id}|">name</td>
+                        <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateCreate})}">12-12-2020 12:12</td>
+                        <td th:with="style=${T(java.time.format.FormatStyle).SHORT}" th:insert="~{layouts/common :: DateTime(dateAndTime=true,value=${service.dateFinish})}">12-12-2020 12:12</td>
+                        <td th:unless="${service.payStatus.toString() eq 'FREE'}" th:text="|#{number.converter(${service.price?:0.00})}$|" th:id="|money${service.id}|">10.5</td>
                         <td th:if="${service.payStatus.toString() eq 'FREE'}" th:id="|money${service.id}|">
                             <div class="d-flex flex-row bd-highlight justify-content-center">
-                                <input style="width: 5em" required name="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" th:placeholder="'0'+${point}+'00'">
+                                <input style="width: 5em" required nameid="money" max="50000" type="text" step="0.01" class="form-control p-2 bd-highlight text-end" th:placeholder="'0'+${point}+'00'">
                                 <button type="button" class="btn btn-primary" th:attr="taskid=${service.id}" onclick="sendPrice(this)">Ok</button>
                             </div>
+                        </td>
+                        <td>
+                            <span hidden th:text="${service.feedBack}" th:id="|feedBack${iterStat.index}|"></span>
+                            <button th:attr="taskId=${iterStat.index}" th:disabled="${(service.workStatus.toString() ne 'DONE') or (service.payStatus.toString() ne 'DONE')  or (service.feedBack.length() eq 0) }" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow">...</button>
                         </td>
                         <td>
                             <button th:if="${service.workStatus.toString() ne 'DONE'}" type="button" class="btn-close" aria-label="Close" th:attr="taskid=${service.id}" onclick="cancelTask(this)"></button>
@@ -134,6 +201,25 @@
         </div>
     </div>
 </div>
+
+
+
+<div th:replace="~{layouts/common :: modalwindow('modalWindow')}"></div>
+
+<script th:inline="javascript">
+    let modalWindow = document.getElementById('modalWindow')
+    modalWindow.addEventListener('show.bs.modal', function (event) {
+        let button = event.relatedTarget
+        let pos = button.getAttribute('taskId')
+        let modalTitle = modalWindow.querySelector('.modal-title')
+        let modalBody = modalWindow.querySelector('#modalBody')
+        let saveButton = modalWindow.querySelector(".btn-primary")
+        saveButton.setAttribute("hidden", true);
+        modalTitle.innerText=[[#{user.table.service.feedback}]]
+        modalBody.innerText=document.getElementById("feedBack"+pos).innerText;
+    });
+</script>
+
 
 
     <div th:replace="~{layouts/common :: footer}"></div>

@@ -28,4 +28,9 @@ public class UserAccount {
     @OneToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,CascadeType.MERGE, CascadeType.REFRESH},fetch = FetchType.LAZY)
     @MapsId
     private UserDB owner;
+
+    public long addMoney(long cents){
+        amount+=cents;
+        return amount;
+    }
 }
