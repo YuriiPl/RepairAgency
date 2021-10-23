@@ -146,6 +146,7 @@
                         [[#{user.table.service.price}]]
                         <i class="bi" th:classappend="${(page.getSort().toString() eq 'price: ASC')?' bi-caret-up-fill':' bi-caret-up'}" onclick="sort.value='price,asc'; sortForm.submit();"></i>
                     </th>
+                    <th th:text="#{user.table.service.feedback}">FEEDBACK</th>
                     <th th:text="#{user.table.service.cancel}">CANCEL</th>
                 </tr>
                 </thead>
@@ -186,6 +187,10 @@
                             </div>
                         </td>
                         <td>
+                            <span hidden th:text="${service.feedBack}" th:id="|feedBack${iterStat.index}|"></span>
+                            <button th:attr="taskId=${iterStat.index}" th:disabled="${(service.workStatus.toString() ne 'DONE') or (service.payStatus.toString() ne 'DONE') }" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow">...</button>
+                        </td>
+                        <td>
                             <button th:if="${service.workStatus.toString() ne 'DONE'}" type="button" class="btn-close" aria-label="Close" th:attr="taskid=${service.id}" onclick="cancelTask(this)"></button>
                         </td>
                     </tr>
@@ -196,6 +201,25 @@
         </div>
     </div>
 </div>
+
+
+
+<div th:replace="~{layouts/common :: modalwindow('modalWindow')}"></div>
+
+<script th:inline="javascript">
+    let modalWindow = document.getElementById('modalWindow')
+    modalWindow.addEventListener('show.bs.modal', function (event) {
+        let button = event.relatedTarget
+        let pos = button.getAttribute('taskId')
+        let modalTitle = modalWindow.querySelector('.modal-title')
+        let modalBody = modalWindow.querySelector('#modalBody')
+        let saveButton = modalWindow.querySelector(".btn-primary")
+        saveButton.setAttribute("hidden", true);
+        modalTitle.innerText=[[#{user.table.service.feedback}]]
+        modalBody.innerText=document.getElementById("feedBack"+pos).innerText;
+    });
+</script>
+
 
 
     <div th:replace="~{layouts/common :: footer}"></div>
