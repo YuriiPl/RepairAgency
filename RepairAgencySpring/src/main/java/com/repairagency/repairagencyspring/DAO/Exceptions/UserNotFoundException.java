@@ -1,4 +1,4 @@
-package com.repairagency.repairagencyspring.controller.manager;
+package com.repairagency.repairagencyspring.DAO.Exceptions;
 
 public class UserNotFoundException extends RuntimeException {
 }

@@ -20,18 +20,10 @@ public class BalanceDAO {
         this.userRepository = userRepository;
     }
 
+
     @Transactional
-    public long addAmount(String login, long amount) throws BalanceTransactionException {
-        log.warn("TRANSACTION STARTS");
-        Optional<UserDB> userDBOptional = userRepository.findByLogin(login);
-        if (!userDBOptional.isPresent()) {
-            throw new BalanceTransactionException("Account not found " + login);
-        }
-        UserDB user = userDBOptional.get();
-        long newBalance = user.getAccount().getAmount() + amount;
-        user.getAccount().setAmount(newBalance);
-        log.warn("TRANSACTION FINISHES");
-        return newBalance;
+    public long addAmount(String login, long amount) {
+        return userRepository.findByLogin(login).get().getAccount().addMoney(amount);
     }
 
 

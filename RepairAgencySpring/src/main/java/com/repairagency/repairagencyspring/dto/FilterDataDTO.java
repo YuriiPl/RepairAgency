@@ -5,6 +5,8 @@ import com.repairagency.repairagencyspring.entity.WorkStatus;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
 @AllArgsConstructor

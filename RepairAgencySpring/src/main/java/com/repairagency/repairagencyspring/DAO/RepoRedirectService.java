@@ -1,7 +1,6 @@
 package com.repairagency.repairagencyspring.DAO;
 
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.validation.BindingResult;
@@ -21,26 +20,23 @@ public class RepoRedirectService {
                 .collect(Collectors.joining("&"));
     }
 
-    public static <T,ID> String save(CrudRepository<T, ID> repo, Object object, String redirectTo, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes){
-        log.warn(String.valueOf(br.hasErrors()));
+    public static <T,ID> String save(CrudRepository<T, ID> repo, T object, String redirectTo, BindingResult br, HttpServletRequest request, RedirectAttributes redirectAttributes){
         if(!br.hasErrors()){
-            log.warn(String.valueOf(br.hasErrors()));
             try {
-                repo.save((T)object);
+                repo.save(object);
             } catch (Exception ex){
                 redirectAttributes.addFlashAttribute("saveDbError",ex.getMessage());
             }
         } else {
-            log.warn(String.valueOf(br.hasErrors()));
             Set<String> attributes = br.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toSet());
             redirectAttributes.addFlashAttribute("validateError",attributes);
         }
         return "redirect:"+redirectTo+"?"+parametersFromHttpRequest(request);
     }
 
-    public static <T,ID> String save(CrudRepository<T, ID> repo, Object object, String redirectTo, HttpServletRequest request, RedirectAttributes redirectAttributes){
+    public static <T,ID> String save(CrudRepository<T, ID> repo, T object, String redirectTo, HttpServletRequest request, RedirectAttributes redirectAttributes){
         try {
-            repo.save((T)object);
+            repo.save(object);
         } catch (Exception ex){
             redirectAttributes.addFlashAttribute("saveDbError",ex.getMessage());
         }

@@ -1,6 +1,6 @@
 package com.repairagency.repairagencyspring.controller.repairer;
 
-import com.repairagency.repairagencyspring.controller.manager.TaskNotFoundException;
+import com.repairagency.repairagencyspring.DAO.Exceptions.TaskNotFoundException;
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import com.repairagency.repairagencyspring.entity.RepairTask;
 import com.repairagency.repairagencyspring.entity.WorkStatus;

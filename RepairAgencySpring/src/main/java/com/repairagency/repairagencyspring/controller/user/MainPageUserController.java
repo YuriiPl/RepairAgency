@@ -1,12 +1,12 @@
 package com.repairagency.repairagencyspring.controller.user;
 
-import com.repairagency.repairagencyspring.controller.manager.TaskNotFoundException;
-import com.repairagency.repairagencyspring.controller.manager.UserNotFoundException;
+import com.repairagency.repairagencyspring.DAO.Exceptions.TaskNotFoundException;
+import com.repairagency.repairagencyspring.DAO.Exceptions.UserNotFoundException;
+import com.repairagency.repairagencyspring.DAO.RepoRedirectService;
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import com.repairagency.repairagencyspring.entity.*;
 import com.repairagency.repairagencyspring.DAO.BalanceDAO;
-import com.repairagency.repairagencyspring.DAO.BalanceTransactionException;
-import com.repairagency.repairagencyspring.DAO.RepoRedirectService;
+import com.repairagency.repairagencyspring.DAO.manager.ServiceAddPageService;
 import com.repairagency.repairagencyspring.repos.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -113,7 +113,6 @@ public class MainPageUserController {
 
 
     @PostMapping("/addmoney")
-    //public @ResponseBody
     public String addMoneyPage(@RequestParam(value = "money") String money, Authentication authentication, HttpServletRequest request)
     {
         String param="";
@@ -124,7 +123,7 @@ public class MainPageUserController {
             } else{
                 param="?errorValue="+money;
             }
-        } catch (ParseException | BalanceTransactionException ignore){
+        } catch (ParseException | NullPointerException ignore){
             param="?errorValue="+money;
         }
         return "redirect:../user"+param;
