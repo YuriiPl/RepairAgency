@@ -1,5 +1,6 @@
 package com.repairagency.repairagencyspring.controller;
 
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
 
-@Slf4j
+@Log4j2
 @Controller
 public class PagesErrorController implements ErrorController {
 

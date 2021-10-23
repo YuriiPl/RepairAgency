@@ -8,6 +8,7 @@ import com.repairagency.repairagencyspring.entity.UserDB;
 import com.repairagency.repairagencyspring.entity.WorkStatus;
 import com.repairagency.repairagencyspring.repos.*;
 import com.repairagency.repairagencyspring.security.Role;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.*;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
 
-@Slf4j
+@Log4j2
 @Controller
 @PreAuthorize("hasAuthority('perm:manager')")
 @RequestMapping(value = "/account/manager/tasks")
@@ -186,6 +187,8 @@ public class TasksPageController {
         }
         return result;
     }
+
+
 
 }
 

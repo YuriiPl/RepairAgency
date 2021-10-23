@@ -6,6 +6,7 @@ import com.repairagency.repairagencyspring.dto.UserDTO;
 import com.repairagency.repairagencyspring.entity.UserDB;
 import com.repairagency.repairagencyspring.repos.UserRepository;
 import com.repairagency.repairagencyspring.security.Role;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
+@Log4j2
 @Controller
 @PreAuthorize("hasAuthority('perm:manager')")
 @RequestMapping(value = "/account/manager")

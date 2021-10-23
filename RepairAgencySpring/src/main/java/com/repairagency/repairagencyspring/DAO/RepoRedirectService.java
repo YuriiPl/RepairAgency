@@ -1,5 +1,6 @@
-package com.repairagency.repairagencyspring.model;
+package com.repairagency.repairagencyspring.DAO;
 
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.repository.CrudRepository;
@@ -10,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
+@Log4j2
 public class RepoRedirectService {
 
     public static String parametersFromHttpRequest(HttpServletRequest request){

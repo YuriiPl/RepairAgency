@@ -2,9 +2,9 @@ package com.repairagency.repairagencyspring.controller.manager;
 
 import com.repairagency.repairagencyspring.dto.ServiceDTO;
 import com.repairagency.repairagencyspring.entity.ServiceName;
-import com.repairagency.repairagencyspring.model.RepoRedirectService;
+import com.repairagency.repairagencyspring.DAO.RepoRedirectService;
 import com.repairagency.repairagencyspring.repos.ServiceNameRepository;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-@Slf4j
+@Log4j2
 @Controller
 @PreAuthorize("hasAuthority('perm:manager')")
 @RequestMapping(value = "/account/manager/service")
@@ -63,31 +63,4 @@ public class ServicePageController {
     }
 
 
-
-//    @RequestMapping(value = "/secondPage", method = RequestMethod.POST)
-//    public ModelAndView checkUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-//
-//        ModelAndView modelAndView = new ModelAndView();
-//        if (!bindingResult.hasErrors()) {
-//            RedirectView redirectView = new RedirectView("mainpage");
-//            redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
-//            modelAndView.setView(redirectView);
-//            redirectAttributes.addFlashAttribute(object));
-//        } else {
-//            modelAndView.setViewName("indexPage");
-//        }
-//        return modelAndView;
-//    }
-//
-//    @RequestMapping(value = "/mainpage", method = RequestMethod.GET)
-//    public String goMainPage(HttpServletRequest request) {
-//
-//        Map<String, ?> map = RequestContextUtils.getInputFlashMap(request);
-//        if (map != null) {
-//            logger.info("It is redirect!");
-//        } else {
-//            logger.info("It is update!");
-//        }
-//        return "main";
-//    }
 }
