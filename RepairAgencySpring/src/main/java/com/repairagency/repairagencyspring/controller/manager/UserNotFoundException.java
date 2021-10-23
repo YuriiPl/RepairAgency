@@ -1,5 +1,5 @@
 package com.repairagency.repairagencyspring.controller.manager;
 
-public class UserNotFoundException extends Exception {
+public class UserNotFoundException extends RuntimeException {
 }
 

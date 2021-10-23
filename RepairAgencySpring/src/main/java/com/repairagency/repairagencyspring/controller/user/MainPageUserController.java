@@ -1,11 +1,12 @@
 package com.repairagency.repairagencyspring.controller.user;
 
 import com.repairagency.repairagencyspring.controller.manager.TaskNotFoundException;
+import com.repairagency.repairagencyspring.controller.manager.UserNotFoundException;
 import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import com.repairagency.repairagencyspring.entity.*;
 import com.repairagency.repairagencyspring.DAO.BalanceDAO;
 import com.repairagency.repairagencyspring.DAO.BalanceTransactionException;
-import com.repairagency.repairagencyspring.model.RepoRedirectService;
+import com.repairagency.repairagencyspring.DAO.RepoRedirectService;
 import com.repairagency.repairagencyspring.repos.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -148,7 +149,7 @@ public class MainPageUserController {
     @PostMapping("/getcomment/{id}")
     @ResponseBody
     public String getCommentPage( @PathVariable(value = "id") Long id){
-        return repairTaskRepository.findById(id).orElseThrow(RuntimeException::new)
+        return repairTaskRepository.findById(id).orElseThrow(UserNotFoundException::new)
                 .getFeedBack().getMessage();
     }
 
