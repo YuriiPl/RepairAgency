@@ -65,7 +65,7 @@
                     <td th:unless="${service.dateFinish}"></td>
                     <td>
                         <span hidden th:text="${service.feedBack}" th:id="|feedBack${iterStat.index}|"></span>
-                        <button th:attr="taskId=${iterStat.index}" th:disabled="${(service.workStatus.toString() ne 'DONE') or (service.payStatus.toString() ne 'DONE') }" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow">...</button>
+                        <button th:attr="taskId=${iterStat.index}" th:disabled="${(service.workStatus.toString() ne 'DONE') or (service.payStatus.toString() ne 'DONE') or (service.feedBack.length() eq 0) }" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow">...</button>
                     </td>
 
                 </tr>
