@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -82,13 +83,11 @@ public class MainPageUserService {
     public String addUserMoney(String login, String money, Locale locale){
         try {
             final Number moneyValue = NumberFormat.getNumberInstance(locale).parse(money);
-            if(moneyValue.floatValue()>0) {
-                balanceDAO.addAmount(login, (long) (moneyValue.floatValue() * 100));
-                return "redirect:../user";
-            }
-        } catch (ParseException | NullPointerException ignore){
+            balanceDAO.addAmount(login, (long) (moneyValue.floatValue() * 100));
+            return "redirect:../user";
+        } catch (Exception ignore){
+            return "redirect:../user?errorValue="+money;
         }
-        return "redirect:../user?errorValue="+money;
     }
 
     @Transactional

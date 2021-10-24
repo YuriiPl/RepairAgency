@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 
 @Log4j2
@@ -51,9 +52,9 @@ public class ManagerUsersPageController {
 
     @PostMapping("/addmoney")
     @ResponseBody
-    public HashMap<String, Object> addMoneyPage(@RequestParam(value = "money") String money, @RequestParam(value = "user") String userName, HttpServletRequest request)
+    public HashMap<String, Object> addMoneyPage(@RequestParam(value = "money") @NotNull String money, @RequestParam(value = "user") @NotNull String userName, HttpServletRequest request)
     {
-        return managerUsersPageService.addMoneyManagerToUser(money, userName, request);
+        return managerUsersPageService.addMoneyToUserFromManager(money, userName, request);
     }
 
     @PostMapping("/lock")

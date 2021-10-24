@@ -27,6 +27,7 @@
         let xhttp=createAJAX(function (response) {
             if(response.status==="ok"){
                 document.getElementById("pay"+response.id).innerText=response.message;
+                button.innerText="";
             }
         },"json");
         xhttp.open("POST", "/account/manager/tasks/cancel/"+id+'?'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
@@ -191,7 +192,7 @@
                             <button th:attr="taskId=${iterStat.index}" th:disabled="${(service.workStatus.toString() ne 'DONE') or (service.payStatus.toString() ne 'DONE')  or (service.feedBack.length() eq 0) }" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWindow">...</button>
                         </td>
                         <td>
-                            <button th:if="${service.workStatus.toString() ne 'DONE'}" type="button" class="btn-close" aria-label="Close" th:attr="taskid=${service.id}" onclick="cancelTask(this)"></button>
+                            <button th:if="${service.workStatus.toString().matches('(?!DONE)\b.+') and service.payStatus.toString().matches('(?!DONE|CANCELED)\b.+')}" type="button" class="btn-close" aria-label="Close" th:attr="taskid=${service.id}" onclick="cancelTask(this)"></button>
                         </td>
                     </tr>
                 </th:block>

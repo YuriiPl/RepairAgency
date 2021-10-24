@@ -29,11 +29,7 @@
         let input=document.querySelector("input[inputPos='"+id+"']");
         let userLogin=input.getAttribute("userLogin");
         let xhttp=createAJAX(function (response) {
-            if(response.status==="ok") {
-                //alert("Ok");
-                console.log(response.message);
-                checkbox.checked = response.message === true;
-            }
+                checkbox.checked = response.status === true;
         },"json");
         xhttp.open("POST", "/account/manager/lock?locked="+checkbox.checked+'&user='+userLogin+'&'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);
         xhttp.send();
