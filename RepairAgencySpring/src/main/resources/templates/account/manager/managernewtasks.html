@@ -27,7 +27,7 @@
         let xhttp=createAJAX(function (response) {
             if(response.status==="ok"){
                 document.getElementById("pay"+response.id).innerText=response.message;
-                button.innerText="";
+                button.parentNode.innerHTML="";
             }
         },"json");
         xhttp.open("POST", "/account/manager/tasks/cancel/"+id+'?'+[[${_csrf.parameterName}]]+"="+[[${_csrf.token}]],  true);

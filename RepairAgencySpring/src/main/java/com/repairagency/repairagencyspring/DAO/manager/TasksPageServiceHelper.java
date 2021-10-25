@@ -29,25 +29,28 @@ public class TasksPageServiceHelper {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void setPriceForTask(@Min(1) long cents, Long taskId) throws TaskNotFoundException {
+    public RepairTask setPriceForTask(@Min(1) long cents, Long taskId) throws TaskNotFoundException {
         RepairTask repairTask = repairTaskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
         repairTask.setPrice(cents);
         repairTask.setPayStatus(PayStatus.WAIT);
+        return repairTask;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void cancelTask(Long taskId) throws TaskNotFoundException {
+    public RepairTask cancelTask(Long taskId) throws TaskNotFoundException {
         RepairTask repairTask = repairTaskRepository.findByIdAndWorkStatusNot(taskId, WorkStatus.DONE).orElseThrow(TaskNotFoundException::new);
         if(repairTask.getPayStatus() != PayStatus.DONE){
             repairTask.setPrice(0L);
         }
         repairTask.setPayStatus(PayStatus.CANCELED);
+        return repairTask;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void acceptPay(Long taskId) throws TaskNotFoundException {
+    public RepairTask acceptPay(Long taskId) throws TaskNotFoundException {
         RepairTask repairTask = repairTaskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
         repairTask.setPayStatus(PayStatus.DONE);
+        return repairTask;
     }
 
     @Transactional(rollbackFor = Exception.class)
