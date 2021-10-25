@@ -7,7 +7,6 @@ import com.repairagency.repairagencyspring.dto.RepairTaskDTO;
 import com.repairagency.repairagencyspring.entity.PayStatus;
 import com.repairagency.repairagencyspring.entity.RepairTask;
 import com.repairagency.repairagencyspring.entity.UserDB;
-import com.repairagency.repairagencyspring.entity.WorkStatus;
 import com.repairagency.repairagencyspring.repos.RepairTaskRepository;
 import com.repairagency.repairagencyspring.repos.UserRepository;
 import com.repairagency.repairagencyspring.security.Role;
@@ -118,24 +117,13 @@ public class TasksPageService {
         return result;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public HashMap<String, Object> setRepairer(Long taskId, Long userId){
         HashMap<String, Object> result = new HashMap<>();
         result.put("status","ok");
         result.put("id",taskId);
         try {
-            RepairTask repairTask = repairTaskRepository.findByIdAndWorkStatus(taskId,WorkStatus.FREE).orElseThrow(TaskNotFoundException::new);
-            if(userId==-1){
-                repairTask.setRepairer(null);
-                result.put("message","");
-            } else {
-                UserDB repairer = userRepository.findByIdAndUserRole(userId, Role.REPAIRER).orElseThrow(UserNotFoundException::new);
-                repairTask.setRepairer(repairer);
-                result.put("message",repairer.getName());
-            }
-            repairTask.setWorkStatus(WorkStatus.FREE);
-            repairTaskRepository.save(repairTask);
+            RepairTask repairTask=tasksPageServiceHelper.setRepairer(taskId,userId);
+            result.put("message",repairTask.getRepairer()==null?"":repairTask.getRepairer().getName());
         } catch (TaskNotFoundException | UserNotFoundException ignore){
             result.put("status","error");
             result.put("type","wrong");
